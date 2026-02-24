@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Compra Fácil · Lista de Compras</title>
+    <style>
+        /* ----- VARIÁVEIS (tema escuro padrão) ----- */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 16px 12px 30px;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            font-weight: 500;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #e0e0e0;
+            --text-soft: #a0a0a0;
+            --border: #3a3a3a;
+            --accent: #6b7280;
+            --highlight: #27272a;
+            --btn-red: #991b1b;
+            --btn-green: #166534;
+            --btn-blue: #1e40af;
+            --btn-amber: #92400e;
+            --input-bg: #222;
+            --header-bg: #2d3748;
+        }
+
+        body.light-mode {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #1f2937;
+            --text-soft: #4b5563;
+            --border: #e5e7eb;
+            --accent: #6b7280;
+            --highlight: #f9fafb;
+            --btn-red: #b91c1c;
+            --btn-green: #065f46;
+            --btn-blue: #1e40af;
+            --btn-amber: #b45309;
+            --input-bg: #fff;
+            --header-bg: #475569;
+        }
+
+        /* ----- CABEÇALHO COM TÍTULO E TEMA ----- */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 8px 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text);
+        }
+
+        .btn-theme {
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--accent);
+            padding: 0 5px;
+            transition: transform 0.1s;
+        }
+        .btn-theme:active { transform: scale(0.9); }
+
+        /* ----- PAINEL DE TOTAIS (3 valores) ----- */
+        .totals-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .total-card {
+            flex: 1;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 5px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 90px;
+        }
+        .total-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .total-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .total-value input {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+            color: var(--btn-green);
+            padding: 4px 0;
+            outline: none;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        /* ----- TABELA (itens) ----- */
+        .table-wrapper {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            -webkit-overflow-scrolling: touch;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+        th {
+            background-color: var(--header-bg);
+            color: white;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 14px 6px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 12px 6px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            background-color: var(--card);
+            color: var(--text);
+        }
+        .col-prod { min-width: 140px; }
+        .col-preco, .col-qtd, .col-total { min-width: 90px; text-align: right; }
+        .col-acoes { width: 50px; text-align: center; }
+
+        input, .input-simulado {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 8px;
+            font-size: 0.95rem;
+            color: var(--text);
+            width: 100%;
+            outline: none;
+            font-weight: 500;
+            transition: border 0.2s;
+        }
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(107,114,128,0.2);
+        }
+        .preco-input, .qtd-input {
+            text-align: right;
+        }
+        .total-cell {
+            font-weight: 700;
+            color: var(--btn-green);
+            text-align: right;
+            padding-right: 12px;
+        }
+        .delete-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--btn-red);
+            cursor: pointer;
+            padding: 6px;
+            line-height: 1;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .delete-btn:active {
+            background-color: rgba(185,28,28,0.2);
+            transform: scale(0.9);
+        }
+
+        /* ----- BOTÃO ADICIONAR NOVO ITEM ----- */
+        .btn-add {
+            background-color: var(--btn-blue);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 16px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.1s, background 0.2s;
+        }
+        .btn-add:active {
+            transform: scale(0.97);
+            background-color: var(--btn-amber);
+        }
+
+        /* ----- BOTÕES DE ABA (estilo imagem) ----- */
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .tab-btn {
+            flex: 1;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 14px 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .tab-btn.active {
+            background-color: var(--btn-red);
+            color: white;
+            border-color: var(--btn-red);
+        }
+        .tab-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ----- RODAPÉ COM TOTAIS E LINK DO CHANGELOG ----- */
+        .footer-totals {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 16px 20px;
+            margin: 25px 0 10px;
+            font-weight: 700;
+        }
+        .footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .footer-label {
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+        .footer-number {
+            font-size: 1.2rem;
+            color: var(--btn-green);
+        }
+        .version-link {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* ----- MODAL DO CHANGELOG ----- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+        .modal-content {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 0 8px;
+        }
+        .changelog-list {
+            list-style: none;
+        }
+        .changelog-item {
+            margin-bottom: 20px;
+            border-left: 3px solid var(--btn-green);
+            padding-left: 16px;
+        }
+        .version {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--btn-green);
+            margin-bottom: 4px;
+        }
+        .version-date {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .version-desc {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .version-desc ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        /* ----- MENSAGEM (toast) ----- */
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            z-index: 999;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>🛒 Compra Fácil</h1>
+        <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌓</button>
+    </div>
+
+    <!-- PAINEL DOS 3 VALORES (topo) -->
+    <div class="totals-panel">
+        <div class="total-card">
+            <div class="total-label">ORÇAMENTO</div>
+            <div class="total-value">
+                <input type="text" id="budgetInput" value="3200,00" placeholder="R$ 0,00">
+            </div>
+        </div>
+        <div class="total-card">
+            <div class="total-label">TOTAL GASTO</div>
+            <div class="total-value" id="totalGastoDisplay">R$ 0,00</div>
+        </div>
+        <div class="total-card">
+            <div class="total-label">DIFERENÇA</div>
+            <div class="total-value" id="diferencaDisplay">R$ 0,00</div>
+        </div>
+    </div>
+
+    <!-- TABELA DE COMPRAS -->
+    <div class="table-wrapper">
+        <table id="comprasTable">
+            <thead>
+                <tr>
+                    <th class="col-prod">ITEM</th>
+                    <th class="col-preco">PREÇO UNIT.</th>
+                    <th class="col-qtd">QTD</th>
+                    <th class="col-total">TOTAL</th>
+                    <th class="col-acoes"></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Linhas serão inseridas via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- BOTÃO ADICIONAR -->
+    <button class="btn-add" id="addItemBtn">+ NOVO ITEM</button>
+
+    <!-- BOTÕES DE ABA (conforme imagem) -->
+    <div class="tab-buttons">
+        <button class="tab-btn active">LISTA DE COMPRAS</button>
+        <button class="tab-btn">Planilha1</button>
+        <button class="tab-btn">ITENS DE COMPRA</button>
+    </div>
+
+    <!-- RODAPÉ COM TOTAIS E LINK DO CHANGELOG -->
+    <div class="footer-totals">
+        <div class="footer-item">
+            <span class="footer-label">ORÇADO</span>
+            <span class="footer-number" id="footerBudget">R$ 3.200,00</span>
+        </div>
+        <div class="footer-item">
+            <span class="footer-label">GASTO</span>
+            <span class="footer-number" id="footerGasto">R$ 0,00</span>
+        </div>
+        <div class="footer-item">
+            <span class="footer-label">SALDO</span>
+            <span class="footer-number" id="footerSaldo">R$ 0,00</span>
+        </div>
+    </div>
+    <div class="version-link" id="showChangelog">📋 Versão 1.2.0 · Novidades</div>
+
+    <!-- MODAL DO CHANGELOG -->
+    <div class="modal-overlay" id="changelogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📜 Histórico de versões</h2>
+                <button class="close-modal" id="closeChangelog">&times;</button>
+            </div>
+            <ul class="changelog-list">
+                <li class="changelog-item">
+                    <div class="version">v1.2.0</div>
+                    <div class="version-date">24/02/2026</div>
+                    <div class="version-desc">
+                        ✨ **Novidades**:
+                        <ul>
+                            <li>Nome do app alterado para "Compra Fácil".</li>
+                            <li>Adicionado modal de changelog com versões escalonáveis.</li>
+                            <li>Melhorias na responsividade para iPhone.</li>
+                            <li>Pequenos ajustes de estilo nos totais.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
+                    <div class="version">v1.1.0</div>
+                    <div class="version-date">15/02/2026</div>
+                    <div class="version-desc">
+                        🚀 **Melhorias**:
+                        <ul>
+                            <li>Campo de orçamento agora editável diretamente.</li>
+                            <li>Persistência de dados com localStorage.</li>
+                            <li>Botões de aba com feedback visual.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
+                    <div class="version">v1.0.0</div>
+                    <div class="version-date">01/02/2026</div>
+                    <div class="version-desc">
+                        ✅ **Versão inicial**:
+                        <ul>
+                            <li>Lista de compras com itens, preço, quantidade e total.</li>
+                            <li>Cálculo automático do total gasto e diferença do orçamento.</li>
+                            <li>Tema claro/escuro.</li>
+                            <li>Interface inspirada no print do Excel.</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <div style="text-align: right; margin-top: 16px;">
+                <button class="btn-add" style="width: auto; padding: 10px 24px; margin:0;" id="closeChangelogBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-message" style="opacity:0;"> </div>
+
+    <script>
+        (function() {
+            // ---------- UTILITÁRIOS ----------
+            function formatarMoeda(valor) {
+                return 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            }
+
+            function parseMoeda(str) {
+                if (!str) return 0;
+                let limpo = str.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
+                let num = parseFloat(limpo);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // ---------- ESTADO ----------
+            let itens = [];
+            let orcamento = 3200.00;
+
+            // Elementos
+            const tbody = document.getElementById('tableBody');
+            const budgetInput = document.getElementById('budgetInput');
+            const totalGastoDisplay = document.getElementById('totalGastoDisplay');
+            const diferencaDisplay = document.getElementById('diferencaDisplay');
+            const footerBudget = document.getElementById('footerBudget');
+            const footerGasto = document.getElementById('footerGasto');
+            const footerSaldo = document.getElementById('footerSaldo');
+            const themeToggle = document.getElementById('themeToggle');
+            const addBtn = document.getElementById('addItemBtn');
+            const toastEl = document.getElementById('toast');
+            const modal = document.getElementById('changelogModal');
+            const showChangelog = document.getElementById('showChangelog');
+            const closeChangelog = document.getElementById('closeChangelog');
+            const closeChangelogBtn = document.getElementById('closeChangelogBtn');
+
+            // ---------- AMOSTRA INICIAL ----------
+            const amostra = [
+                { nome: 'Manjericão', preco: 2.89, qtd: 4 },
+                { nome: 'Mostarda cepeta', preco: 17.80, qtd: 2 },
+                { nome: 'Água sani/Cloral', preco: 1.69, qtd: 2 },
+                { nome: 'Deterge/ype 500C', preco: 2.89, qtd: 3 },
+                { nome: 'Coca 1L', preco: 5.00, qtd: 6 },
+                { nome: 'São Geraldo 1L', preco: 4.50, qtd: 6 }
+            ];
+            itens = amostra.map(i => ({ ...i }));
+
+            // ---------- FUNÇÕES DE RENDER ----------
+            function calcularTotalGasto() {
+                return itens.reduce((acc, item) => acc + (item.preco * item.qtd), 0);
+            }
+
+            function atualizarTotais() {
+                const totalGasto = calcularTotalGasto();
+                const diferenca = orcamento - totalGasto;
+
+                totalGastoDisplay.innerText = formatarMoeda(totalGasto);
+                diferencaDisplay.innerText = formatarMoeda(diferenca);
+                footerBudget.innerText = formatarMoeda(orcamento);
+                footerGasto.innerText = formatarMoeda(totalGasto);
+                footerSaldo.innerText = formatarMoeda(diferenca);
+            }
+
+            function salvarNoStorage() {
+                localStorage.setItem('compraFacil_itens', JSON.stringify(itens));
+                localStorage.setItem('compraFacil_orcamento', orcamento.toString());
+            }
+
+            function carregarStorage() {
+                const itensSalvos = localStorage.getItem('compraFacil_itens');
+                if (itensSalvos) {
+                    try { itens = JSON.parse(itensSalvos); } catch(e) { itens = []; }
+                } else {
+                    itens = amostra;
+                }
+                const orcSalvo = localStorage.getItem('compraFacil_orcamento');
+                if (orcSalvo) {
+                    orcamento = parseFloat(orcSalvo);
+                    if (isNaN(orcamento)) orcamento = 3200.00;
+                } else {
+                    orcamento = 3200.00;
+                }
+                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                atualizarTotais();
+            }
+
+            function renderizarTabela() {
+                tbody.innerHTML = '';
+                itens.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    const totalItem = item.preco * item.qtd;
+
+                    // Nome
+                    const tdNome = document.createElement('td');
+                    tdNome.className = 'col-prod';
+                    const inputNome = document.createElement('input');
+                    inputNome.type = 'text';
+                    inputNome.value = item.nome;
+                    inputNome.placeholder = 'Item';
+                    inputNome.dataset.index = index;
+                    inputNome.dataset.field = 'nome';
+                    inputNome.addEventListener('input', function(e) {
+                        const idx = e.target.dataset.index;
+                        itens[idx].nome = e.target.value;
+                        salvarNoStorage();
+                    });
+                    tdNome.appendChild(inputNome);
+
+                    // Preço
+                    const tdPreco = document.createElement('td');
+                    tdPreco.className = 'col-preco';
+                    const inputPreco = document.createElement('input');
+                    inputPreco.type = 'text';
+                    inputPreco.value = item.preco.toFixed(2).replace('.', ',');
+                    inputPreco.className = 'preco-input';
+                    inputPreco.dataset.index = index;
+                    inputPreco.dataset.field = 'preco';
+                    inputPreco.addEventListener('input', function(e) {
+                        const idx = e.target.dataset.index;
+                        const val = parseMoeda(e.target.value);
+                        itens[idx].preco = isNaN(val) ? 0 : val;
+                        e.target.value = itens[idx].preco.toFixed(2).replace('.', ',');
+                        salvarNoStorage();
+                        renderizarTabela();
+                        atualizarTotais();
+                    });
+                    inputPreco.addEventListener('blur', function(e) {
+                        const idx = e.target.dataset.index;
+                        e.target.value = itens[idx].preco.toFixed(2).replace('.', ',');
+                    });
+                    tdPreco.appendChild(inputPreco);
+
+                    // Quantidade
+                    const tdQtd = document.createElement('td');
+                    tdQtd.className = 'col-qtd';
+                    const inputQtd = document.createElement('input');
+                    inputQtd.type = 'text';
+                    inputQtd.value = item.qtd;
+                    inputQtd.className = 'qtd-input';
+                    inputQtd.dataset.index = index;
+                    inputQtd.dataset.field = 'qtd';
+                    inputQtd.addEventListener('input', function(e) {
+                        const idx = e.target.dataset.index;
+                        let val = parseMoeda(e.target.value);
+                        if (isNaN(val) || val < 0) val = 0;
+                        itens[idx].qtd = val;
+                        e.target.value = val;
+                        salvarNoStorage();
+                        renderizarTabela();
+                        atualizarTotais();
+                    });
+                    inputQtd.addEventListener('blur', function(e) {
+                        const idx = e.target.dataset.index;
+                        e.target.value = itens[idx].qtd;
+                    });
+                    tdQtd.appendChild(inputQtd);
+
+                    // Total da linha
+                    const tdTotal = document.createElement('td');
+                    tdTotal.className = 'col-total total-cell';
+                    tdTotal.innerText = formatarMoeda(totalItem);
+
+                    // Ações (deletar)
+                    const tdAcoes = document.createElement('td');
+                    tdAcoes.className = 'col-acoes';
+                    const btnDel = document.createElement('button');
+                    btnDel.className = 'delete-btn';
+                    btnDel.innerHTML = '🗑️';
+                    btnDel.setAttribute('aria-label', 'Remover');
+                    btnDel.dataset.index = index;
+                    btnDel.addEventListener('click', function(e) {
+                        const idx = e.currentTarget.dataset.index;
+                        itens.splice(idx, 1);
+                        salvarNoStorage();
+                        renderizarTabela();
+                        atualizarTotais();
+                        mostrarToast('Item removido');
+                    });
+                    tdAcoes.appendChild(btnDel);
+
+                    tr.appendChild(tdNome);
+                    tr.appendChild(tdPreco);
+                    tr.appendChild(tdQtd);
+                    tr.appendChild(tdTotal);
+                    tr.appendChild(tdAcoes);
+                    tbody.appendChild(tr);
+                });
+                atualizarTotais();
+            }
+
+            function mostrarToast(msg) {
+                toastEl.style.opacity = '1';
+                toastEl.innerText = msg;
+                setTimeout(() => {
+                    toastEl.style.opacity = '0';
+                }, 2000);
+            }
+
+            // ---------- EVENTOS ----------
+            budgetInput.addEventListener('input', function(e) {
+                let val = parseMoeda(e.target.value);
+                if (isNaN(val) || val < 0) val = 0;
+                orcamento = val;
+                e.target.value = orcamento.toFixed(2).replace('.', ',');
+                salvarNoStorage();
+                atualizarTotais();
+            });
+            budgetInput.addEventListener('blur', function(e) {
+                e.target.value = orcamento.toFixed(2).replace('.', ',');
+            });
+
+            addBtn.addEventListener('click', function() {
+                itens.push({ nome: 'Novo item', preco: 0.00, qtd: 1 });
+                salvarNoStorage();
+                renderizarTabela();
+                mostrarToast('Item adicionado');
+            });
+
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                localStorage.setItem('compraFacil_theme', isLight ? 'light' : 'dark');
+            });
+
+            const temaSalvo = localStorage.getItem('compraFacil_theme');
+            if (temaSalvo === 'light') {
+                document.body.classList.add('light-mode');
+            }
+
+            // Changelog modal
+            showChangelog.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+            function fecharModal() {
+                modal.style.display = 'none';
+            }
+            closeChangelog.addEventListener('click', fecharModal);
+            closeChangelogBtn.addEventListener('click', fecharModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) fecharModal();
+            });
+
+            // Abas (simulação)
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    mostrarToast('Aba: ' + this.innerText);
+                });
+            });
+
+            // Inicializar
+            carregarStorage();
+            renderizarTabela();
+        })();
+    </script>
+</body>
+</html>
