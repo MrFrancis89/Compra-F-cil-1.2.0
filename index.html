@@ -39,7 +39,7 @@
             --input-bg: #222;
             --header-bg: #2d3748;
             --btn-star: #855C1B;   
-            --btn-cyan: #0e7490;    /* para zerar qtd */
+            --btn-cyan: #0e7490;
         }
 
         body.light-mode {
@@ -140,6 +140,37 @@
             border-bottom: 1px dashed var(--border);
         }
 
+        /* ----- BOTÕES GLOBAIS DE ZERAR ----- */
+        .global-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .global-btn {
+            flex: 1;
+            background-color: var(--btn-amber);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 5px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .global-btn:active {
+            transform: scale(0.96);
+        }
+        .global-btn.preco {
+            background-color: var(--btn-star);
+        }
+        .global-btn.qtd {
+            background-color: var(--btn-cyan);
+        }
+
         /* ----- TABELA (itens) com larguras fixas e suporte a swipe ----- */
         .table-wrapper {
             background-color: var(--card);
@@ -233,7 +264,7 @@
             font-size: 0.95rem;
         }
 
-        /* ----- SWIPE (fundo com botões) ----- */
+        /* ----- SWIPE (fundo com botão) ----- */
         #swipe-bg {
             position: absolute;
             right: 0;
@@ -242,7 +273,7 @@
             display: none;
             align-items: stretch;
             justify-content: flex-end;
-            width: 240px; /* aumentado para 3 botões */
+            width: 80px; /* apenas um botão */
             z-index: 5;
             border-left: 1px solid var(--border);
             overflow: hidden;
@@ -280,12 +311,6 @@
         .swipe-btn-excluir {
             background-color: var(--btn-red);
         }
-        .swipe-btn-zerar-preco {
-            background-color: var(--btn-star);
-        }
-        .swipe-btn-zerar-qtd {
-            background-color: var(--btn-cyan);
-        }
 
         /* ----- BOTÃO ADICIONAR NOVO ITEM ----- */
         .btn-add {
@@ -299,48 +324,13 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: transform 0.1s, background 0.2s;
         }
         .btn-add:active {
             transform: scale(0.97);
             background-color: var(--btn-amber);
-        }
-
-        /* ----- BOTÕES DE ABA ----- */
-        .tab-buttons {
-            display: flex;
-            gap: 6px;
-            margin-top: 15px;
-            justify-content: center;
-            flex-wrap: nowrap;
-        }
-        .tab-btn {
-            flex: 1;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 12px 2px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .tab-btn.active {
-            background-color: var(--btn-red);
-            color: white;
-            border-color: var(--btn-red);
-        }
-        .tab-btn:active {
-            transform: scale(0.96);
         }
 
         /* ----- RODAPÉ COM TOTAIS E LINK DO CHANGELOG ----- */
@@ -548,7 +538,7 @@
             justify-content: center;
         }
 
-        /* ----- MODAL DE CONFIRMAÇÃO (para exclusão) ----- */
+        /* ----- MODAL DE CONFIRMAÇÃO GENÉRICO ----- */
         .confirm-box {
             background: var(--card);
             border: 1px solid var(--border);
@@ -589,7 +579,7 @@
 </head>
 <body>
     <div class="header-container">
-        <h1>🛒 Compra Fácil <span class="versao-titulo" id="versaoTitulo">v1.5.0</span></h1>
+        <h1>🛒 Compra Fácil <span class="versao-titulo" id="versaoTitulo">v1.6.0</span></h1>
         <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌓</button>
     </div>
 
@@ -609,6 +599,12 @@
             <div class="total-label">DIFERENÇA</div>
             <div class="total-value" id="diferencaDisplay">R$ 0,00</div>
         </div>
+    </div>
+
+    <!-- BOTÕES GLOBAIS DE ZERAR -->
+    <div class="global-actions">
+        <button class="global-btn preco" id="zerarPrecosBtn">Zerar Preços</button>
+        <button class="global-btn qtd" id="zerarQuantidadesBtn">Zerar Quantidades</button>
     </div>
 
     <!-- TABELA DE COMPRAS (com swipe) -->
@@ -632,13 +628,6 @@
     <!-- BOTÃO ADICIONAR -->
     <button class="btn-add" id="addItemBtn">+ NOVO ITEM</button>
 
-    <!-- BOTÕES DE ABA -->
-    <div class="tab-buttons">
-        <button class="tab-btn active">LISTA DE COMPRAS</button>
-        <button class="tab-btn">Planilha1</button>
-        <button class="tab-btn">ITENS DE COMPRA</button>
-    </div>
-
     <!-- RODAPÉ COM TOTAIS E LINK DO CHANGELOG -->
     <div class="footer-totals">
         <div class="footer-item">
@@ -654,7 +643,7 @@
             <span class="footer-number" id="footerSaldo">R$ 0,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 1.5.0 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 1.6.0 · Novidades</div>
 
     <!-- MODAL DO CHANGELOG -->
     <div class="modal-overlay" id="changelogModal">
@@ -665,40 +654,27 @@
             </div>
             <ul class="changelog-list">
                 <li class="changelog-item">
+                    <div class="version">v1.6.0</div>
+                    <div class="version-date">24/02/2026</div>
+                    <div class="version-desc">
+                        ✨ **Novidades**:
+                        <ul>
+                            <li>Itens mantidos em ordem alfabética automaticamente.</li>
+                            <li>Botões globais "Zerar Preços" e "Zerar Quantidades" (com confirmação).</li>
+                            <li>Swipe agora apenas com botão "Apagar" (com confirmação).</li>
+                            <li>Campo de orçamento: ao clicar, limpa para nova digitação; confirmação ao sair.</li>
+                            <li>Abas removidas (simplificação da interface).</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
                     <div class="version">v1.5.0</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
                         ✨ **Melhorias**:
                         <ul>
-                            <li>Corrigido: teclado numérico não fecha mais ao digitar.</li>
-                            <li>Confirmação ao apagar item via swipe.</li>
-                            <li>Swipe agora com 3 botões: Apagar (confirmação), Zerar R$ e Zerar Qtd.</li>
-                            <li>Zerar individualmente preço ou quantidade.</li>
-                            <li>Otimização da detecção de swipe.</li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="changelog-item">
-                    <div class="version">v1.4.0</div>
-                    <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">
-                        ✨ **Novidades**:
-                        <ul>
-                            <li>Calculadora com layout do projeto base.</li>
-                            <li>Swipe com opções apagar/zerar (versão anterior).</li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="changelog-item">
-                    <div class="version">v1.3.0</div>
-                    <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">
-                        ✨ **Melhorias**:
-                        <ul>
-                            <li>Quebra de texto na coluna ITEM.</li>
-                            <li>Teclado numérico na Qtd.</li>
-                            <li>Calculadora integrada no preço unitário.</li>
-                            <li>Confirmação ao alterar o orçamento.</li>
+                            <li>Correção do teclado numérico.</li>
+                            <li>Swipe com três botões (apagar, zerar preço, zerar qtd).</li>
                         </ul>
                     </div>
                 </li>
@@ -709,7 +685,7 @@
         </div>
     </div>
 
-    <!-- MODAL DA CALCULADORA (ESTILO BASE) -->
+    <!-- MODAL DA CALCULADORA -->
     <div class="modal-overlay" id="calcModal">
         <div class="calc-box">
             <div class="calc-header">
@@ -740,26 +716,14 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO PARA EXCLUSÃO -->
-    <div class="modal-overlay" id="confirmDeleteModal">
+    <!-- MODAL DE CONFIRMAÇÃO GENÉRICO -->
+    <div class="modal-overlay" id="confirmModal">
         <div class="confirm-box">
-            <h3>Confirmar exclusão</h3>
-            <p id="deleteConfirmMessage">Deseja realmente remover este item?</p>
+            <h3 id="confirmTitle">Confirmar</h3>
+            <p id="confirmMessage">Deseja realizar esta ação?</p>
             <div class="confirm-buttons">
-                <button class="btn-add" id="confirmDeleteYes" style="flex:1; background: var(--btn-red);">Sim</button>
-                <button class="btn-add" id="confirmDeleteNo" style="flex:1; background: var(--btn-green);">Não</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE CONFIRMAÇÃO DO ORÇAMENTO -->
-    <div class="modal-overlay" id="confirmBudgetModal">
-        <div class="confirm-box">
-            <h3>Confirmar alteração</h3>
-            <p id="budgetConfirmMessage">Deseja alterar o orçamento?</p>
-            <div class="confirm-buttons">
-                <button class="btn-add" id="confirmBudgetYes" style="flex:1; background: var(--btn-green);">Sim</button>
-                <button class="btn-add" id="confirmBudgetNo" style="flex:1; background: var(--btn-red);">Não</button>
+                <button class="btn-add" id="confirmYes" style="flex:1; background: var(--btn-red);">Sim</button>
+                <button class="btn-add" id="confirmNo" style="flex:1; background: var(--btn-green);">Não</button>
             </div>
         </div>
     </div>
@@ -769,7 +733,7 @@
     <script>
         (function() {
             // ---------- CONSTANTES ----------
-            const VERSAO_ATUAL = "v1.5.0";
+            const VERSAO_ATUAL = "v1.6.0";
 
             // ---------- UTILITÁRIOS ----------
             function formatarMoeda(valor) {
@@ -786,7 +750,7 @@
             // ---------- ESTADO ----------
             let itens = [];
             let orcamento = 3200.00;
-            let orcamentoAntes = 3200.00;
+            let orcamentoAntes = 3200.00; // para confirmação
 
             // Elementos
             const tbody = document.getElementById('tableBody');
@@ -801,6 +765,8 @@
             const toastEl = document.getElementById('toast');
             const versaoTitulo = document.getElementById('versaoTitulo');
             const showChangelogLink = document.getElementById('showChangelog');
+            const zerarPrecosBtn = document.getElementById('zerarPrecosBtn');
+            const zerarQuantidadesBtn = document.getElementById('zerarQuantidadesBtn');
 
             // Modais
             const changelogModal = document.getElementById('changelogModal');
@@ -811,14 +777,11 @@
             const closeCalc = document.getElementById('closeCalc');
             const calcDisplay = document.getElementById('calc-display');
             const calcTitle = document.getElementById('calc-title');
-            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            const confirmDeleteYes = document.getElementById('confirmDeleteYes');
-            const confirmDeleteNo = document.getElementById('confirmDeleteNo');
-            const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
-            const confirmBudgetModal = document.getElementById('confirmBudgetModal');
-            const confirmBudgetYes = document.getElementById('confirmBudgetYes');
-            const confirmBudgetNo = document.getElementById('confirmBudgetNo');
-            const budgetConfirmMessage = document.getElementById('budgetConfirmMessage');
+            const confirmModal = document.getElementById('confirmModal');
+            const confirmTitle = document.getElementById('confirmTitle');
+            const confirmMessage = document.getElementById('confirmMessage');
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
 
             // Swipe
             const swipeBg = document.getElementById('swipe-bg');
@@ -828,8 +791,8 @@
             let currentPrecoInput = null;
             let calcExpression = '';
 
-            // Estado para exclusão
-            let itemIndexToDelete = null;
+            // Estado para ações de confirmação
+            let acaoConfirmar = null; // função a ser executada se confirmado
 
             // ---------- AMOSTRA INICIAL ----------
             const amostra = [
@@ -841,6 +804,11 @@
                 { nome: 'São Geraldo 1L', preco: 4.50, qtd: 6 }
             ];
             itens = amostra.map(i => ({ ...i }));
+
+            // ---------- FUNÇÕES DE ORDENAÇÃO ----------
+            function ordenarItens() {
+                itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
+            }
 
             // ---------- FUNÇÕES DE ATUALIZAÇÃO ----------
             function calcularTotalGasto() {
@@ -871,6 +839,7 @@
                 } else {
                     itens = amostra;
                 }
+                ordenarItens(); // garante ordem alfabética
                 const orcSalvo = localStorage.getItem('compraFacil_orcamento');
                 if (orcSalvo) {
                     orcamento = parseFloat(orcSalvo);
@@ -890,14 +859,15 @@
                 totalCell.innerText = formatarMoeda(item.preco * item.qtd);
             }
 
-            // Função para renderizar tabela (cria as linhas uma vez)
+            // Função para renderizar tabela (cria as linhas a partir do array ordenado)
             function renderizarTabela() {
                 tbody.innerHTML = '';
+                ordenarItens(); // garante ordem antes de renderizar
                 itens.forEach((item, index) => {
                     const tr = document.createElement('tr');
                     tr.dataset.index = index;
 
-                    // Nome (contenteditable)
+                    // Nome (contenteditable) - com evento blur para reordenar após edição
                     const tdNome = document.createElement('td');
                     tdNome.className = 'col-prod';
                     const nomeDiv = document.createElement('div');
@@ -905,10 +875,17 @@
                     nomeDiv.contentEditable = 'true';
                     nomeDiv.innerText = item.nome;
                     nomeDiv.dataset.index = index;
-                    nomeDiv.addEventListener('input', function(e) {
+                    nomeDiv.addEventListener('blur', function(e) {
                         const idx = e.target.dataset.index;
-                        itens[idx].nome = e.target.innerText;
+                        const novoNome = e.target.innerText.trim();
+                        if (novoNome === '') {
+                            e.target.innerText = itens[idx].nome; // restaura se vazio
+                            return;
+                        }
+                        itens[idx].nome = novoNome;
                         salvarNoStorage();
+                        // Reordenar e re-renderizar para manter ordem alfabética
+                        renderizarTabela();
                     });
                     tdNome.appendChild(nomeDiv);
 
@@ -930,7 +907,7 @@
                     });
                     tdPreco.appendChild(inputPreco);
 
-                    // Quantidade (inputmode decimal) - com evento input que atualiza sem recriar
+                    // Quantidade (inputmode decimal)
                     const tdQtd = document.createElement('td');
                     tdQtd.className = 'col-qtd';
                     const inputQtd = document.createElement('input');
@@ -970,17 +947,15 @@
                 initSwipe(); // reinicia eventos de swipe
             }
 
-            // ---------- SWIPE ----------
+            // ---------- SWIPE (apenas botão apagar) ----------
             let swipeStartX = 0, swipeStartY = 0, swipeCurrentX = 0;
             let isSwiping = false, swipedRow = null, justSwiped = false;
-            const swipeWidth = 240; // 3 botões
+            const swipeWidth = 80; // apenas um botão
 
             function initSwipe() {
                 const rows = document.querySelectorAll('#tableBody tr');
                 swipeBg.innerHTML = `
                     <button class="swipe-btn swipe-btn-excluir" aria-label="Apagar item">🗑️ Apagar</button>
-                    <button class="swipe-btn swipe-btn-zerar-preco" aria-label="Zerar preço">R$ 0</button>
-                    <button class="swipe-btn swipe-btn-zerar-qtd" aria-label="Zerar quantidade">Qtd 0</button>
                 `;
                 swipeBg.style.width = swipeWidth + 'px';
                 swipeBg.style.display = 'none';
@@ -990,7 +965,6 @@
 
                 rows.forEach(row => {
                     row.addEventListener('touchstart', function(e) {
-                        // Ignorar se tocou em input ou contenteditable
                         if (e.target.tagName === 'INPUT' || e.target.contentEditable === 'true') return;
                         if (swipedRow && swipedRow !== row) closeSwipe(swipedRow);
                         
@@ -1005,7 +979,6 @@
                     row.addEventListener('touchmove', function(e) {
                         let deltaX = getClientX(e) - swipeStartX;
                         let deltaY = getClientY(e) - swipeStartY;
-                        // Só considera swipe se movimento horizontal for significativo e maior que vertical
                         if (!isSwiping && Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY)) {
                             isSwiping = true;
                         }
@@ -1043,43 +1016,20 @@
                     });
                 });
 
-                // Botões do swipe
+                // Botão apagar
                 document.querySelectorAll('.swipe-btn-excluir').forEach(btn => {
                     btn.addEventListener('click', function() {
                         if (!swipedRow) return;
                         const idx = swipedRow.dataset.index;
-                        itemIndexToDelete = idx;
-                        deleteConfirmMessage.innerText = `Remover "${itens[idx].nome}"?`;
-                        confirmDeleteModal.style.display = 'flex';
-                        closeSwipe(swipedRow);
-                    });
-                });
-                document.querySelectorAll('.swipe-btn-zerar-preco').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        if (!swipedRow) return;
-                        const idx = swipedRow.dataset.index;
-                        itens[idx].preco = 0;
-                        // Atualiza o input de preço
-                        const precoInput = swipedRow.querySelector('.preco-input');
-                        precoInput.value = '0,00';
-                        salvarNoStorage();
-                        atualizarTotalLinha(swipedRow, idx);
-                        atualizarTotais();
-                        mostrarToast('Preço zerado');
-                        closeSwipe(swipedRow);
-                    });
-                });
-                document.querySelectorAll('.swipe-btn-zerar-qtd').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        if (!swipedRow) return;
-                        const idx = swipedRow.dataset.index;
-                        itens[idx].qtd = 0;
-                        const qtdInput = swipedRow.querySelector('.qtd-input');
-                        qtdInput.value = '0';
-                        salvarNoStorage();
-                        atualizarTotalLinha(swipedRow, idx);
-                        atualizarTotais();
-                        mostrarToast('Quantidade zerada');
+                        confirmTitle.innerText = 'Confirmar exclusão';
+                        confirmMessage.innerText = `Remover "${itens[idx].nome}"?`;
+                        acaoConfirmar = () => {
+                            itens.splice(idx, 1);
+                            salvarNoStorage();
+                            renderizarTabela();
+                            mostrarToast('Item removido');
+                        };
+                        confirmModal.style.display = 'flex';
                         closeSwipe(swipedRow);
                     });
                 });
@@ -1131,7 +1081,6 @@
                                 const idx = currentPrecoInput.dataset.index;
                                 itens[idx].preco = num;
                                 salvarNoStorage();
-                                // Atualiza total da linha correspondente
                                 const row = currentPrecoInput.closest('tr');
                                 atualizarTotalLinha(row, idx);
                                 atualizarTotais();
@@ -1160,69 +1109,91 @@
                 }
             });
 
-            // ---------- CONFIRMAÇÃO DE EXCLUSÃO ----------
-            confirmDeleteYes.addEventListener('click', () => {
-                if (itemIndexToDelete !== null) {
-                    itens.splice(itemIndexToDelete, 1);
-                    salvarNoStorage();
-                    renderizarTabela(); // recria a tabela (simplifica)
-                    atualizarTotais();
-                    mostrarToast('Item removido');
+            // ---------- CONFIRMAÇÃO GENÉRICA ----------
+            confirmYes.addEventListener('click', () => {
+                if (acaoConfirmar) {
+                    acaoConfirmar();
+                    acaoConfirmar = null;
                 }
-                confirmDeleteModal.style.display = 'none';
-                itemIndexToDelete = null;
+                confirmModal.style.display = 'none';
             });
-            confirmDeleteNo.addEventListener('click', () => {
-                confirmDeleteModal.style.display = 'none';
-                itemIndexToDelete = null;
+            confirmNo.addEventListener('click', () => {
+                confirmModal.style.display = 'none';
+                acaoConfirmar = null;
             });
             window.addEventListener('click', (e) => {
-                if (e.target === confirmDeleteModal) {
-                    confirmDeleteModal.style.display = 'none';
-                    itemIndexToDelete = null;
+                if (e.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                    acaoConfirmar = null;
                 }
             });
 
-            // ---------- CONFIRMAÇÃO DO ORÇAMENTO ----------
-            let orcamentoNovo = null;
-            budgetInput.addEventListener('focus', function() {
-                orcamentoAntes = orcamento;
+            // ---------- BOTÕES GLOBAIS DE ZERAR ----------
+            zerarPrecosBtn.addEventListener('click', () => {
+                confirmTitle.innerText = 'Zerar todos os preços';
+                confirmMessage.innerText = 'Deseja definir todos os preços como R$ 0,00?';
+                acaoConfirmar = () => {
+                    itens.forEach(item => item.preco = 0);
+                    salvarNoStorage();
+                    renderizarTabela();
+                    mostrarToast('Todos os preços foram zerados');
+                };
+                confirmModal.style.display = 'flex';
             });
+
+            zerarQuantidadesBtn.addEventListener('click', () => {
+                confirmTitle.innerText = 'Zerar todas as quantidades';
+                confirmMessage.innerText = 'Deseja definir todas as quantidades como 0?';
+                acaoConfirmar = () => {
+                    itens.forEach(item => item.qtd = 0);
+                    salvarNoStorage();
+                    renderizarTabela();
+                    mostrarToast('Todas as quantidades foram zeradas');
+                };
+                confirmModal.style.display = 'flex';
+            });
+
+            // ---------- ORÇAMENTO COM CONFIRMAÇÃO E LIMPEZA AO FOCAR ----------
+            budgetInput.addEventListener('focus', function() {
+                orcamentoAntes = orcamento; // guarda valor atual
+                this.value = ''; // limpa para nova digitação
+            });
+
             budgetInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    budgetInput.blur();
-                }
-            });
-            budgetInput.addEventListener('blur', function() {
-                let val = parseMoeda(budgetInput.value);
-                if (isNaN(val) || val < 0) val = 0;
-                orcamentoNovo = val;
-                if (orcamentoNovo !== orcamento) {
-                    budgetConfirmMessage.innerText = `Deseja alterar o orçamento de ${formatarMoeda(orcamento)} para ${formatarMoeda(orcamentoNovo)}?`;
-                    confirmBudgetModal.style.display = 'flex';
-                } else {
-                    budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                    this.blur();
                 }
             });
 
-            confirmBudgetYes.addEventListener('click', () => {
-                if (orcamentoNovo !== null) {
-                    orcamento = orcamentoNovo;
-                    salvarNoStorage();
-                    atualizarTotais();
-                    mostrarToast('Orçamento atualizado');
+            budgetInput.addEventListener('blur', function() {
+                let val = this.value.trim();
+                if (val === '') {
+                    // Se vazio, restaura o anterior
+                    this.value = orcamento.toFixed(2).replace('.', ',');
+                    return;
                 }
-                confirmBudgetModal.style.display = 'none';
-            });
-            confirmBudgetNo.addEventListener('click', () => {
-                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
-                confirmBudgetModal.style.display = 'none';
-            });
-            window.addEventListener('click', (e) => {
-                if (e.target === confirmBudgetModal) {
-                    confirmBudgetModal.style.display = 'none';
-                    budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                let novo = parseMoeda(val);
+                if (isNaN(novo) || novo < 0) novo = 0;
+                if (novo !== orcamento) {
+                    confirmTitle.innerText = 'Alterar orçamento';
+                    confirmMessage.innerText = `Deseja alterar o orçamento de ${formatarMoeda(orcamento)} para ${formatarMoeda(novo)}?`;
+                    acaoConfirmar = () => {
+                        orcamento = novo;
+                        salvarNoStorage();
+                        atualizarTotais();
+                        mostrarToast('Orçamento atualizado');
+                    };
+                    confirmModal.style.display = 'flex';
+                    // Se cancelar, restaura o valor antigo
+                    const oldOrc = orcamento;
+                    const cancelHandler = () => {
+                        budgetInput.value = oldOrc.toFixed(2).replace('.', ',');
+                        confirmNo.removeEventListener('click', cancelHandler);
+                    };
+                    confirmNo.addEventListener('click', cancelHandler, { once: true });
+                } else {
+                    this.value = orcamento.toFixed(2).replace('.', ',');
                 }
             });
 
@@ -1230,7 +1201,7 @@
             addBtn.addEventListener('click', function() {
                 itens.push({ nome: 'Novo item', preco: 0.00, qtd: 1 });
                 salvarNoStorage();
-                renderizarTabela(); // recria para incluir novo item
+                renderizarTabela();
                 mostrarToast('Item adicionado');
             });
 
@@ -1260,15 +1231,6 @@
             closeChangelogBtn.addEventListener('click', fecharChangelog);
             window.addEventListener('click', (e) => {
                 if (e.target === changelogModal) fecharChangelog();
-            });
-
-            // Abas (simulação)
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    mostrarToast('Aba: ' + this.innerText);
-                });
             });
 
             function mostrarToast(msg) {
