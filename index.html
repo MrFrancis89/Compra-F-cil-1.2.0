@@ -175,18 +175,21 @@
             display: block;
         }
 
-        /* ----- BOTÕES GLOBAIS (agora com 3 botões) ----- */
+        /* ----- BOTÕES GLOBAIS (agora com wrap para caber) ----- */
         .global-actions {
             display: flex;
+            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 20px;
+            justify-content: center;
         }
         .global-btn {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 110px; /* garante que o texto não seja cortado */
             background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 14px 5px;
+            padding: 14px 8px;
             font-size: 0.8rem;
             font-weight: 500;
             color: var(--text);
@@ -195,7 +198,9 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: var(--shadow);
-            white-space: nowrap;
+            white-space: normal; /* permite quebra de linha */
+            word-break: break-word;
+            text-align: center;
         }
         .global-btn:active {
             transform: scale(0.98);
@@ -665,11 +670,11 @@
 </head>
 <body class="light-mode">
     <div class="header-container">
-        <h1>Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.2.0</span></h1>
+        <h1>Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.2.1</span></h1>
         <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌙</button>
     </div>
 
-    <!-- PAINEL DE TOTAIS (com inputmode numérico) -->
+    <!-- PAINEL DE TOTAIS -->
     <div class="totals-panel">
         <div class="total-card">
             <div class="total-label">Orçamento</div>
@@ -695,7 +700,7 @@
 
     <!-- ABA LISTA -->
     <div id="tab-lista" class="tab-content active">
-        <!-- Três botões de zerar -->
+        <!-- Três botões de zerar (agora com wrap) -->
         <div class="global-actions">
             <button class="global-btn preco" id="zerarPrecosBtn">Zerar Preços</button>
             <button class="global-btn qtd" id="zerarQuantidadesBtn">Zerar Quantidades</button>
@@ -798,7 +803,7 @@
             <span class="footer-number" id="footerSaldo">R$ 0,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 2.2.0 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 2.2.1 · Novidades</div>
 
     <!-- MODAIS -->
     <div class="modal-overlay" id="changelogModal">
@@ -809,21 +814,26 @@
             </div>
             <ul class="changelog-list">
                 <li class="changelog-item">
+                    <div class="version">v2.2.1</div>
+                    <div class="version-date">24/02/2026</div>
+                    <div class="version-desc">
+                        ✨ **Ajuste de layout**:
+                        <ul>
+                            <li>Botões de ação agora com flex-wrap e min-width para caber em qualquer tela sem cortes.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
                     <div class="version">v2.2.0</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
                         ✨ **Melhorias**:
                         <ul>
-                            <li>Campo de orçamento agora com teclado numérico (inputmode decimal).</li>
-                            <li>Novo botão "Zerar Itens" (zera preço e quantidade de todos os itens).</li>
-                            <li>Calculadora corrigida: ao digitar, o zero inicial é substituído.</li>
+                            <li>Campo de orçamento com teclado numérico.</li>
+                            <li>Novo botão "Zerar Itens".</li>
+                            <li>Calculadora corrigida (substitui zero inicial).</li>
                         </ul>
                     </div>
-                </li>
-                <li class="changelog-item">
-                    <div class="version">v2.1.0</div>
-                    <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">Design refinado, paleta sóbria.</div>
                 </li>
             </ul>
             <div style="text-align: right; margin-top: 20px;">
@@ -877,7 +887,7 @@
 
     <script>
         (function() {
-            const VERSAO_ATUAL = "v2.2.0";
+            const VERSAO_ATUAL = "v2.2.1";
 
             // Utilitários
             function formatarMoeda(valor) {
@@ -1179,7 +1189,7 @@
                 }, { passive: true });
             }
 
-            // Calculadora corrigida (zero inicial substituído)
+            // Calculadora
             document.querySelectorAll('[data-calc]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const val = e.target.dataset.calc;
@@ -1215,7 +1225,6 @@
                         if ((calcExpression === '' || calcExpression === '0') && !isNaN(val) && val !== '') {
                             calcExpression = val;
                         } else if (val === ',') {
-                            // Se estiver vazio, começa com "0,"
                             if (calcExpression === '' || calcExpression === '0') {
                                 calcExpression = '0.';
                             } else {
@@ -1290,7 +1299,6 @@
 
             // Orçamento (com filtro para aceitar apenas números e vírgula)
             budgetInput.addEventListener('input', function(e) {
-                // Permite apenas dígitos e vírgula
                 this.value = this.value.replace(/[^\d,]/g, '');
             });
             budgetInput.addEventListener('focus', function() {
