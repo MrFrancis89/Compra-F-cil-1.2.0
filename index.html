@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Compra Fácil · Lista + Comparador</title>
+    <title>Compra Fácil · Design Refinado</title>
     <style>
-        /* ----- VARIÁVEIS (tema escuro padrão) ----- */
+        /* ----- VARIÁVEIS (paleta sóbria e elegante) ----- */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -14,79 +14,75 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            padding: 16px 12px 90px; /* padding inferior para o FAB */
+            padding: 20px 16px 90px; /* padding inferior para o FAB */
             transition: background-color 0.3s, color 0.3s;
             min-height: 100vh;
-            font-weight: 500;
+            font-weight: 400;
             -webkit-font-smoothing: antialiased;
-            position: relative;
+            line-height: 1.4;
         }
 
         :root {
-            --bg: #121212;
-            --card: #1e1e1e;
-            --text: #e0e0e0;
-            --text-soft: #a0a0a0;
-            --border: #3a3a3a;
-            --accent: #6b7280;
-            --highlight: #27272a;
-            --btn-red: #991b1b;
-            --btn-green: #166534;
-            --btn-blue: #1e40af;
-            --btn-amber: #92400e;
-            --input-bg: #222;
-            --header-bg: #2d3748;
-            --btn-star: #855C1B;   
-            --btn-cyan: #0e7490;
-            --accent-neon: #0aff84;
-            --fab-bg: #1e40af;
+            --bg: #f5f5f7;        /* fundo claro suave */
+            --card: #ffffff;       /* cards brancos */
+            --text: #1d1d1f;       /* texto quase preto */
+            --text-soft: #6e6e73;  /* texto secundário */
+            --border: #d2d2d7;     /* bordas suaves */
+            --accent: #0066cc;     /* azul Apple para ações */
+            --accent-hover: #0055b0;
+            --highlight: #f5f5f7;  /* destaque leve */
+            --btn-red: #ff3b30;     /* vermelho para exclusão (Apple) */
+            --btn-green: #34c759;   /* verde para confirmação (Apple) */
+            --btn-blue: #0066cc;    /* azul para adicionar */
+            --btn-amber: #ff9f0a;   /* laranja para zerar */
+            --input-bg: #ffffff;
+            --header-bg: #ffffff;
+            --fab-bg: #0066cc;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode {
-            --bg: #f3f4f6;
-            --card: #ffffff;
-            --text: #1f2937;
-            --text-soft: #4b5563;
-            --border: #e5e7eb;
-            --accent: #6b7280;
-            --highlight: #f9fafb;
-            --btn-red: #b91c1c;
-            --btn-green: #065f46;
-            --btn-blue: #1e40af;
-            --btn-amber: #b45309;
-            --input-bg: #fff;
-            --header-bg: #475569;
-            --btn-star: #b47e19;
-            --btn-cyan: #0b5e7a;
-            --accent-neon: #0f7b4a;
-            --fab-bg: #1e40af;
+        /* Tema escuro (opcional, mas mantido) */
+        body.dark-mode {
+            --bg: #1d1d1f;
+            --card: #2c2c2e;
+            --text: #f5f5f7;
+            --text-soft: #8e8e93;
+            --border: #3a3a3c;
+            --accent: #0a84ff;
+            --accent-hover: #0070e0;
+            --highlight: #2c2c2e;
+            --input-bg: #3a3a3c;
+            --header-bg: #2c2c2e;
+            --fab-bg: #0a84ff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* ----- CABEÇALHO COM TÍTULO E TEMA ----- */
+        /* ----- CABEÇALHO ----- */
         .header-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background-color: var(--card);
             border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 8px 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
         }
 
         h1 {
             font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
             color: var(--text);
         }
         .versao-titulo {
             font-size: 0.8rem;
-            color: var(--accent);
+            color: var(--text-soft);
             margin-left: 8px;
             font-weight: 400;
         }
@@ -94,86 +90,82 @@
         .btn-theme {
             background: transparent;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             cursor: pointer;
-            color: var(--accent);
+            color: var(--text-soft);
             padding: 0 5px;
             transition: transform 0.1s;
         }
         .btn-theme:active { transform: scale(0.9); }
 
-        /* ----- PAINEL DE TOTAIS (3 valores) ----- */
+        /* ----- PAINEL DE TOTAIS ----- */
         .totals-panel {
             display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .total-card {
             flex: 1;
             background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 12px 5px;
+            padding: 14px 8px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            min-width: 90px;
+            box-shadow: var(--shadow);
         }
         .total-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: var(--accent);
+            color: var(--text-soft);
             letter-spacing: 0.5px;
             margin-bottom: 6px;
+            font-weight: 500;
         }
         .total-value {
             font-size: 1.2rem;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text);
         }
         .total-value input {
             background: transparent;
             border: none;
             font-size: 1.2rem;
-            font-weight: 700;
+            font-weight: 600;
             width: 100%;
             text-align: center;
-            color: var(--btn-green);
+            color: var(--accent);
             padding: 4px 0;
             outline: none;
             border-bottom: 1px dashed var(--border);
         }
 
-        /* ----- ABAS ----- */
+        /* ----- ABAS (estilo Apple) ----- */
         .tab-bar {
             display: flex;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 4px;
+            box-shadow: var(--shadow);
         }
         .tab-btn {
             flex: 1;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 12px 5px;
+            background: transparent;
+            border: none;
+            border-radius: 26px;
+            padding: 10px 5px;
             font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+            color: var(--text-soft);
             transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-align: center;
             cursor: pointer;
+            text-align: center;
         }
         .tab-btn.active {
-            background-color: var(--btn-red);
+            background-color: var(--accent);
             color: white;
-            border-color: var(--btn-red);
-        }
-        .tab-btn:active {
-            transform: scale(0.96);
         }
 
         /* ----- CONTEÚDO DAS ABAS ----- */
@@ -184,35 +176,37 @@
             display: block;
         }
 
-        /* ----- BOTÕES GLOBAIS DE ZERAR (dentro da aba lista) ----- */
+        /* ----- BOTÕES GLOBAIS DE ZERAR ----- */
         .global-actions {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         .global-btn {
             flex: 1;
-            background-color: var(--btn-amber);
-            color: white;
-            border: none;
-            border-radius: 30px;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
             padding: 14px 5px;
             font-size: 0.9rem;
-            font-weight: 700;
+            font-weight: 500;
+            color: var(--text);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
         }
         .global-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.98);
         }
         .global-btn.preco {
-            background-color: var(--btn-star);
+            border-color: var(--btn-amber);
+            color: var(--btn-amber);
         }
         .global-btn.qtd {
-            background-color: var(--btn-cyan);
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         /* ----- TABELA (itens) ----- */
@@ -222,7 +216,7 @@
             border-radius: 20px;
             overflow: hidden;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow);
             position: relative;
         }
         table {
@@ -232,23 +226,19 @@
         }
         th {
             background-color: var(--header-bg);
-            color: white;
-            font-weight: 600;
+            color: var(--text-soft);
+            font-weight: 500;
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            padding: 14px 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            letter-spacing: 0.5px;
+            padding: 16px 6px;
+            border-bottom: 1px solid var(--border);
         }
         td {
-            padding: 8px 4px;
+            padding: 12px 6px;
             border-bottom: 1px solid var(--border);
-            text-align: left;
-            background-color: var(--card);
-            color: var(--text);
             vertical-align: middle;
+            background-color: var(--card);
         }
         .col-prod { width: 40%; }
         .col-preco { width: 20%; }
@@ -258,55 +248,55 @@
         .produto-editavel {
             background-color: var(--input-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 8px;
+            border-radius: 12px;
+            padding: 10px 12px;
             font-size: 0.9rem;
             color: var(--text);
             width: 100%;
-            min-height: 45px;
+            min-height: 44px;
             outline: none;
-            font-weight: 500;
+            font-weight: 400;
             transition: border 0.2s;
             word-wrap: break-word;
             overflow-wrap: break-word;
             white-space: pre-wrap;
             resize: none;
-            line-height: 1.3;
-            -webkit-appearance: none;
+            line-height: 1.4;
+            box-shadow: none;
         }
         .produto-editavel:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(107,114,128,0.2);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
         }
 
         input {
             background-color: var(--input-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 8px;
+            border-radius: 12px;
+            padding: 10px 12px;
             font-size: 0.9rem;
             color: var(--text);
             width: 100%;
             outline: none;
-            font-weight: 500;
+            font-weight: 400;
             transition: border 0.2s;
         }
         input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(107,114,128,0.2);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
         }
         .preco-input, .qtd-input {
             text-align: right;
         }
         .total-cell {
-            font-weight: 700;
-            color: var(--btn-green);
+            font-weight: 500;
+            color: var(--accent);
             text-align: right;
-            padding-right: 8px;
+            padding-right: 12px;
             font-size: 0.95rem;
         }
 
-        /* ----- SWIPE (fundo com botão) ----- */
+        /* ----- SWIPE ----- */
         #swipe-bg {
             position: absolute;
             right: 0;
@@ -319,76 +309,63 @@
             z-index: 5;
             border-left: 1px solid var(--border);
             overflow: hidden;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 12px 12px 0;
             pointer-events: none;
         }
         .swipe-btn {
             flex: 1;
             border: none;
             color: white;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            padding: 0 5px;
+            padding: 0 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
-            background: transparent;
-            box-shadow: none;
-            border-radius: 0;
-            height: 100%;
-            line-height: 1.2;
-            font-size: 11px;
+            background: var(--btn-red);
+            font-size: 12px;
             pointer-events: auto;
-            white-space: nowrap;
+            text-transform: uppercase;
         }
         .swipe-btn:active {
             opacity: 0.8;
-            transform: none;
-            box-shadow: none;
-        }
-        .swipe-btn-excluir {
-            background-color: var(--btn-red);
         }
 
-        /* ----- COMPARADOR (aba separada) ----- */
+        /* ----- COMPARADOR (elegante) ----- */
         .comparador-container {
-            background: var(--card);
+            background-color: var(--card);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 24px;
             margin-bottom: 20px;
+            box-shadow: var(--shadow);
         }
         .comparador-title {
             font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-neon);
+            font-weight: 600;
+            color: var(--text);
             margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             text-align: center;
         }
         .produto-card {
-            background: var(--highlight);
+            background-color: var(--highlight);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
         .product-header {
-            color: var(--accent);
+            color: var(--text-soft);
             font-size: 0.8rem;
             text-transform: uppercase;
-            margin-bottom: 12px;
-            font-weight: 700;
+            margin-bottom: 16px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
         .linha-input {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 16px;
             align-items: flex-end;
         }
         .linha-input .col {
@@ -397,94 +374,96 @@
             flex-direction: column;
         }
         .linha-input label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: var(--text-soft);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             text-transform: uppercase;
+            font-weight: 500;
         }
         .linha-input input, .linha-input select {
             height: 48px;
+            border-radius: 12px;
         }
         .btn-calcular {
-            background-color: var(--accent-neon);
-            color: #000;
-            font-weight: 800;
+            background-color: var(--accent);
+            color: white;
             border: none;
             border-radius: 40px;
-            padding: 16px 30px;
-            font-size: 1.1rem;
+            padding: 16px 24px;
+            font-size: 1rem;
+            font-weight: 600;
             width: 100%;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(10,255,132,0.3);
+            box-shadow: var(--shadow);
             margin: 10px 0;
+            transition: background 0.2s;
         }
         .btn-calcular:active {
-            transform: scale(0.97);
+            background-color: var(--accent-hover);
+            transform: scale(0.98);
         }
         #comparadorResultado {
-            background: var(--card);
+            background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 20px;
-            margin-top: 15px;
+            padding: 24px;
+            margin-top: 20px;
             text-align: center;
             display: none;
         }
         .winner-title {
-            font-size: 1.5rem;
-            color: var(--accent-neon);
-            font-weight: 700;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--accent);
             margin-bottom: 8px;
         }
         .economy-badge {
             display: inline-block;
             margin-top: 12px;
-            padding: 8px 18px;
-            background: rgba(10, 255, 132, 0.1);
-            color: var(--accent-neon);
+            padding: 8px 20px;
+            background-color: var(--accent);
+            color: white;
             border-radius: 40px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border: 1px solid rgba(10, 255, 132, 0.3);
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
         /* ----- BOTÃO FLUTUANTE (FAB) ----- */
         .fab {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 65px;
-            height: 65px;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
             background-color: var(--fab-bg);
-            border-radius: 50%;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border: 2px solid var(--border);
+            box-shadow: 0 6px 16px rgba(0,102,204,0.3);
             color: white;
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 400;
             cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
+            transition: transform 0.2s, background 0.2s;
             z-index: 1000;
-            -webkit-tap-highlight-color: transparent;
+            border: none;
         }
         .fab:active {
-            transform: scale(0.9);
-            background-color: var(--btn-green);
+            transform: scale(0.92);
+            background-color: var(--accent-hover);
         }
 
-        /* ----- RODAPÉ COM TOTAIS E LINK DO CHANGELOG ----- */
+        /* ----- RODAPÉ ----- */
         .footer-totals {
             display: flex;
             justify-content: space-between;
             background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 30px;
-            padding: 16px 20px;
-            margin: 25px 0 10px;
-            font-weight: 700;
+            padding: 20px 24px;
+            margin: 30px 0 16px;
+            font-weight: 500;
+            box-shadow: var(--shadow);
         }
         .footer-item {
             display: flex;
@@ -494,18 +473,20 @@
         }
         .footer-label {
             font-size: 0.7rem;
-            color: var(--accent);
+            color: var(--text-soft);
             text-transform: uppercase;
+            font-weight: 500;
         }
         .footer-number {
             font-size: 1.2rem;
-            color: var(--btn-green);
+            color: var(--accent);
+            font-weight: 600;
         }
         .version-link {
             text-align: center;
-            margin-top: 5px;
+            margin-top: 8px;
             font-size: 0.8rem;
-            color: var(--accent);
+            color: var(--text-soft);
             text-decoration: underline;
             cursor: pointer;
             padding: 8px;
@@ -518,178 +499,131 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 2000;
-            padding: 16px;
+            padding: 20px;
         }
         .modal-content {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            max-width: 500px;
+            border-radius: 28px;
+            max-width: 480px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .modal-header h2 {
             font-size: 1.3rem;
+            font-weight: 600;
             color: var(--text);
         }
         .close-modal {
             background: none;
             border: none;
             font-size: 1.8rem;
-            color: var(--accent);
+            color: var(--text-soft);
             cursor: pointer;
             padding: 0 8px;
-        }
-        .changelog-list {
-            list-style: none;
-        }
-        .changelog-item {
-            margin-bottom: 20px;
-            border-left: 3px solid var(--btn-green);
-            padding-left: 16px;
-        }
-        .version {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--btn-green);
-            margin-bottom: 4px;
-        }
-        .version-date {
-            font-size: 0.75rem;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-        .version-desc {
-            font-size: 0.9rem;
-            color: var(--text-soft);
-            line-height: 1.5;
-            white-space: pre-line;
         }
 
         /* Calculadora */
         .calc-box {
             background: var(--card);
-            padding: 25px;
-            border-radius: 20px;
+            padding: 24px;
+            border-radius: 28px;
             width: 100%;
             max-width: 360px;
             border: 1px solid var(--border);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
         }
         .calc-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--accent);
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 16px;
         }
         #calc-title {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 85%;
-            color: var(--text);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-soft);
         }
         .calc-close {
-            background: transparent;
+            background: none;
             border: none;
-            color: var(--accent);
-            font-size: 24px;
-            padding: 5px;
-            box-shadow: none;
+            font-size: 1.6rem;
+            color: var(--text-soft);
             cursor: pointer;
         }
-        .calc-close:active {
-            transform: scale(0.8);
-            color: var(--btn-red);
-        }
         #calc-display {
-            background: var(--edit-bg, #222);
-            color: var(--text);
-            font-size: 36px;
-            text-align: right;
-            padding: 20px;
-            border-radius: 12px;
+            background: var(--input-bg);
             border: 1px solid var(--border);
-            min-height: 75px;
-            overflow-x: auto;
-            white-space: nowrap;
-            font-family: monospace;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 2.2rem;
+            text-align: right;
+            margin-bottom: 20px;
+            color: var(--text);
+            font-family: 'SF Mono', monospace;
         }
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
+            gap: 12px;
         }
         .calc-btn {
             background: var(--highlight);
-            color: var(--text);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            font-size: 24px;
-            padding: 20px 0;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border-radius: 16px;
+            padding: 18px 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text);
             cursor: pointer;
+            transition: all 0.1s;
             text-align: center;
-            transition: transform 0.1s;
         }
         .calc-btn:active {
-            transform: scale(0.94);
+            background: var(--accent);
+            color: white;
         }
         .calc-bg-op {
             background: var(--card);
             color: var(--accent);
-            font-size: 26px;
-            border-color: var(--border);
         }
         .calc-bg-confirm {
             background: var(--btn-green);
             color: white;
             border: none;
-            font-size: 24px;
-            grid-row: span 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* Confirmação */
         .confirm-box {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
+            border-radius: 28px;
+            padding: 32px;
             max-width: 320px;
             text-align: center;
         }
         .confirm-box h3 {
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
         }
         .confirm-box p {
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             color: var(--text-soft);
         }
         .confirm-buttons {
@@ -697,6 +631,17 @@
             gap: 12px;
             justify-content: center;
         }
+        .confirm-buttons button {
+            flex: 1;
+            padding: 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        #confirmYes { background: var(--btn-red); }
+        #confirmNo { background: var(--btn-green); }
 
         .toast-message {
             position: fixed;
@@ -705,7 +650,7 @@
             transform: translateX(-50%);
             background: rgba(0,0,0,0.8);
             color: white;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 40px;
             font-size: 0.9rem;
             z-index: 3000;
@@ -714,34 +659,34 @@
         }
     </style>
 </head>
-<body>
+<body class="light-mode">
     <div class="header-container">
-        <h1>🛒 Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.0.0</span></h1>
-        <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌓</button>
+        <h1>Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.1.0</span></h1>
+        <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌙</button>
     </div>
 
-    <!-- PAINEL DE TOTAIS (sempre visível) -->
+    <!-- PAINEL DE TOTAIS -->
     <div class="totals-panel">
         <div class="total-card">
-            <div class="total-label">ORÇAMENTO</div>
+            <div class="total-label">Orçamento</div>
             <div class="total-value">
                 <input type="text" id="budgetInput" value="3200,00" placeholder="R$ 0,00">
             </div>
         </div>
         <div class="total-card">
-            <div class="total-label">TOTAL GASTO</div>
+            <div class="total-label">Total gasto</div>
             <div class="total-value" id="totalGastoDisplay">R$ 0,00</div>
         </div>
         <div class="total-card">
-            <div class="total-label">DIFERENÇA</div>
+            <div class="total-label">Diferença</div>
             <div class="total-value" id="diferencaDisplay">R$ 0,00</div>
         </div>
     </div>
 
     <!-- ABAS -->
     <div class="tab-bar">
-        <div class="tab-btn active" data-tab="lista">📋 Lista</div>
-        <div class="tab-btn" data-tab="comparador">🔍 Comparador</div>
+        <div class="tab-btn active" data-tab="lista">Lista</div>
+        <div class="tab-btn" data-tab="comparador">Comparador</div>
     </div>
 
     <!-- ABA LISTA -->
@@ -770,7 +715,7 @@
     <!-- ABA COMPARADOR -->
     <div id="tab-comparador" class="tab-content">
         <div class="comparador-container">
-            <div class="comparador-title">Comparar Preços</div>
+            <div class="comparador-title">Comparar preços</div>
 
             <div class="produto-card">
                 <div class="product-header">Produto 1</div>
@@ -829,25 +774,25 @@
         </div>
     </div>
 
-    <!-- BOTÃO FLUTUANTE (FAB) -->
+    <!-- BOTÃO FLUTUANTE -->
     <div class="fab" id="fabAddItem">+</div>
 
-    <!-- RODAPÉ COM TOTAIS E LINK DO CHANGELOG -->
+    <!-- RODAPÉ -->
     <div class="footer-totals">
         <div class="footer-item">
-            <span class="footer-label">ORÇADO</span>
+            <span class="footer-label">Orçado</span>
             <span class="footer-number" id="footerBudget">R$ 3.200,00</span>
         </div>
         <div class="footer-item">
-            <span class="footer-label">GASTO</span>
+            <span class="footer-label">Gasto</span>
             <span class="footer-number" id="footerGasto">R$ 0,00</span>
         </div>
         <div class="footer-item">
-            <span class="footer-label">SALDO</span>
+            <span class="footer-label">Saldo</span>
             <span class="footer-number" id="footerSaldo">R$ 0,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 2.0.0 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 2.1.0 · Novidades</div>
 
     <!-- MODAIS -->
     <div class="modal-overlay" id="changelogModal">
@@ -858,26 +803,25 @@
             </div>
             <ul class="changelog-list">
                 <li class="changelog-item">
-                    <div class="version">v2.0.0</div>
+                    <div class="version">v2.1.0</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
-                        ✨ **Novidades**:
+                        ✨ **Design refinado**:
                         <ul>
-                            <li>Comparador de preços em aba separada.</li>
-                            <li>Botão flutuante (FAB) para adicionar itens.</li>
-                            <li>Interface reorganizada com abas.</li>
-                            <li>Correções gerais e melhorias de desempenho.</li>
+                            <li>Paleta sóbria e elegante, inspirada na Apple.</li>
+                            <li>Layout com cards, sombras suaves e tipografia clean.</li>
+                            <li>Melhorias na usabilidade e consistência visual.</li>
                         </ul>
                     </div>
                 </li>
                 <li class="changelog-item">
-                    <div class="version">v1.7.0</div>
+                    <div class="version">v2.0.0</div>
                     <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">Versão anterior com comparador integrado.</div>
+                    <div class="version-desc">Versão com abas e FAB.</div>
                 </li>
             </ul>
-            <div style="text-align: right; margin-top: 16px;">
-                <button class="btn-add" style="width: auto; padding: 10px 24px; margin:0;" id="closeChangelogBtn">Fechar</button>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn-calcular" style="width: auto; padding: 12px 24px;" id="closeChangelogBtn">Fechar</button>
             </div>
         </div>
     </div>
@@ -885,8 +829,8 @@
     <div class="modal-overlay" id="calcModal">
         <div class="calc-box">
             <div class="calc-header">
-                <span id="calc-title">🧮 Calculadora</span>
-                <button class="calc-close" id="closeCalc">✖</button>
+                <span id="calc-title">Calculadora</span>
+                <button class="calc-close" id="closeCalc">✕</button>
             </div>
             <div id="calc-display">0</div>
             <div class="calc-grid">
@@ -917,8 +861,8 @@
             <h3 id="confirmTitle">Confirmar</h3>
             <p id="confirmMessage">Deseja realizar esta ação?</p>
             <div class="confirm-buttons">
-                <button class="btn-add" id="confirmYes" style="flex:1; background: var(--btn-red);">Sim</button>
-                <button class="btn-add" id="confirmNo" style="flex:1; background: var(--btn-green);">Não</button>
+                <button id="confirmYes">Sim</button>
+                <button id="confirmNo">Não</button>
             </div>
         </div>
     </div>
@@ -927,7 +871,7 @@
 
     <script>
         (function() {
-            const VERSAO_ATUAL = "v2.0.0";
+            const VERSAO_ATUAL = "v2.1.0";
 
             // Utilitários
             function formatarMoeda(valor) {
@@ -998,7 +942,7 @@
             // Ação de confirmação
             let acaoConfirmar = null;
 
-            // ---------- DADOS INICIAIS ----------
+            // Dados iniciais
             const amostra = [
                 { nome: 'Manjericão', preco: 2.89, qtd: 4 },
                 { nome: 'Mostarda cepeta', preco: 17.80, qtd: 2 },
@@ -1009,7 +953,7 @@
             ];
             itens = amostra.map(i => ({ ...i }));
 
-            // ---------- FUNÇÕES DA LISTA ----------
+            // Funções da lista
             function ordenarItens() {
                 itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
             }
@@ -1134,13 +1078,13 @@
                 initSwipe();
             }
 
-            // ---------- SWIPE ----------
+            // Swipe
             let swipeStartX, swipeStartY, swipeCurrentX, isSwiping = false, swipedRow = null;
             const swipeWidth = 80;
 
             function initSwipe() {
                 const rows = document.querySelectorAll('#tableBody tr');
-                swipeBg.innerHTML = `<button class="swipe-btn swipe-btn-excluir">🗑️ Apagar</button>`;
+                swipeBg.innerHTML = `<button class="swipe-btn">Apagar</button>`;
                 swipeBg.style.width = swipeWidth + 'px';
 
                 function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
@@ -1191,7 +1135,7 @@
                     });
                 });
 
-                document.querySelectorAll('.swipe-btn-excluir').forEach(btn => {
+                document.querySelectorAll('.swipe-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         if (!swipedRow) return;
                         const idx = swipedRow.dataset.index;
@@ -1228,7 +1172,7 @@
                 }, { passive: true });
             }
 
-            // ---------- CALCULADORA ----------
+            // Calculadora
             document.querySelectorAll('[data-calc]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const val = e.target.dataset.calc;
@@ -1249,9 +1193,6 @@
                                     const row = currentPrecoInput.closest('tr');
                                     if (row) atualizarTotalLinha(row, idx);
                                     atualizarTotais();
-                                } else {
-                                    // Para campos do comparador (não têm index)
-                                    // Não precisa salvar na lista
                                 }
                             } catch (er) {
                                 calcDisplay.innerText = 'Erro';
@@ -1273,7 +1214,7 @@
                 if (e.target === calcModal) calcModal.style.display = 'none';
             });
 
-            // ---------- CONFIRMAÇÃO ----------
+            // Confirmação
             confirmYes.addEventListener('click', () => {
                 if (acaoConfirmar) acaoConfirmar();
                 confirmModal.style.display = 'none';
@@ -1289,7 +1230,7 @@
                 }
             });
 
-            // ---------- BOTÕES GLOBAIS ----------
+            // Botões globais
             zerarPrecosBtn.addEventListener('click', () => {
                 confirmTitle.innerText = 'Zerar preços';
                 confirmMessage.innerText = 'Definir todos os preços como R$ 0,00?';
@@ -1313,7 +1254,7 @@
                 confirmModal.style.display = 'flex';
             });
 
-            // ---------- ORÇAMENTO ----------
+            // Orçamento
             budgetInput.addEventListener('focus', function() {
                 orcamentoAntes = orcamento;
                 this.value = '';
@@ -1341,13 +1282,13 @@
                 }
             });
 
-            // ---------- COMPARADOR ----------
+            // Comparador
             [compP1, compP2].forEach(input => {
                 input.addEventListener('click', function() {
                     currentPrecoInput = this;
                     calcExpression = this.value.replace(',', '.') || '0';
                     calcDisplay.innerText = calcExpression.replace('.', ',');
-                    calcTitle.innerText = '🧮 Comparador';
+                    calcTitle.innerText = 'Calculadora';
                     calcModal.style.display = 'flex';
                 });
             });
@@ -1397,7 +1338,7 @@
                 resultadoDiv.style.display = 'block';
             });
 
-            // ---------- FAB ----------
+            // FAB
             fabAdd.addEventListener('click', () => {
                 itens.push({ nome: 'Novo item', preco: 0, qtd: 1 });
                 salvarNoStorage();
@@ -1405,7 +1346,7 @@
                 mostrarToast('Item adicionado');
             });
 
-            // ---------- ABAS ----------
+            // Abas
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     tabBtns.forEach(b => b.classList.remove('active'));
@@ -1416,16 +1357,19 @@
                 });
             });
 
-            // ---------- TEMA ----------
+            // Tema
             themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('light-mode');
-                localStorage.setItem('compraFacil_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('compraFacil_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
             });
-            if (localStorage.getItem('compraFacil_theme') === 'light') {
-                document.body.classList.add('light-mode');
+            if (localStorage.getItem('compraFacil_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerText = '☀️';
+            } else {
+                themeToggle.innerText = '🌙';
             }
 
-            // ---------- VERSÃO E CHANGELOG ----------
+            // Versão e changelog
             versaoTitulo.innerText = VERSAO_ATUAL;
             showChangelogLink.innerText = `📋 Versão ${VERSAO_ATUAL} · Novidades`;
             showChangelogLink.addEventListener('click', () => {
