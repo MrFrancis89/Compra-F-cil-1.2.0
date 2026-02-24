@@ -130,7 +130,7 @@
             border-bottom: 1px dashed var(--border);
         }
 
-        /* ----- TABELA (itens) ----- */
+        /* ----- TABELA (itens) com larguras fixas para evitar rolagem horizontal ----- */
         .table-wrapper {
             background-color: var(--card);
             border: 1px solid var(--border);
@@ -143,7 +143,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 500px;
+            table-layout: fixed; /* Força larguras fixas */
         }
         th {
             background-color: var(--header-bg);
@@ -152,26 +152,57 @@
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            padding: 14px 6px;
+            padding: 14px 4px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         td {
-            padding: 12px 6px;
+            padding: 8px 4px;
             border-bottom: 1px solid var(--border);
             text-align: left;
             background-color: var(--card);
             color: var(--text);
+            vertical-align: middle;
         }
-        .col-prod { min-width: 140px; }
-        .col-preco, .col-qtd, .col-total { min-width: 90px; text-align: right; }
-        .col-acoes { width: 50px; text-align: center; }
+        /* larguras percentuais */
+        .col-prod { width: 38%; }
+        .col-preco { width: 17%; }
+        .col-qtd { width: 15%; }
+        .col-total { width: 18%; }
+        .col-acoes { width: 12%; }
+
+        /* Célula de produto com contenteditable (quebra de texto) */
+        .produto-editavel {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 8px;
+            font-size: 0.9rem;
+            color: var(--text);
+            width: 100%;
+            min-height: 45px;
+            outline: none;
+            font-weight: 500;
+            transition: border 0.2s;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            resize: none;
+            line-height: 1.3;
+            -webkit-appearance: none;
+        }
+        .produto-editavel:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(107,114,128,0.2);
+        }
 
         input, .input-simulado {
             background-color: var(--input-bg);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 10px 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text);
             width: 100%;
             outline: none;
@@ -189,7 +220,8 @@
             font-weight: 700;
             color: var(--btn-green);
             text-align: right;
-            padding-right: 12px;
+            padding-right: 8px;
+            font-size: 0.95rem;
         }
         .delete-btn {
             background: transparent;
@@ -233,27 +265,31 @@
             background-color: var(--btn-amber);
         }
 
-        /* ----- BOTÕES DE ABA (estilo imagem) ----- */
+        /* ----- BOTÕES DE ABA (sem rolagem) ----- */
         .tab-buttons {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             margin-top: 15px;
             justify-content: center;
+            flex-wrap: nowrap;
         }
         .tab-btn {
             flex: 1;
             background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 14px 5px;
-            font-size: 0.9rem;
+            padding: 12px 2px;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             transition: all 0.2s;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .tab-btn.active {
             background-color: var(--btn-red);
@@ -300,7 +336,7 @@
             padding: 8px;
         }
 
-        /* ----- MODAL DO CHANGELOG ----- */
+        /* ----- MODAL (changelog e confirmação) ----- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -374,6 +410,60 @@
             margin-top: 5px;
         }
 
+        /* ----- MODAL CALCULADORA ----- */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .calc-btn {
+            background: var(--highlight);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.1s;
+            text-align: center;
+        }
+        .calc-btn:active {
+            transform: scale(0.94);
+            background: var(--accent);
+            color: white;
+        }
+        .calc-btn.operador {
+            background: var(--card);
+            color: var(--btn-amber);
+        }
+        .calc-btn.igual {
+            background: var(--btn-green);
+            color: white;
+        }
+        .calc-display {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 2rem;
+            text-align: right;
+            margin-bottom: 15px;
+            color: var(--text);
+            overflow-x: auto;
+        }
+        .calc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calc-header span {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
         /* ----- MENSAGEM (toast) ----- */
         .toast-message {
             position: fixed;
@@ -436,7 +526,7 @@
     <!-- BOTÃO ADICIONAR -->
     <button class="btn-add" id="addItemBtn">+ NOVO ITEM</button>
 
-    <!-- BOTÕES DE ABA (conforme imagem) -->
+    <!-- BOTÕES DE ABA -->
     <div class="tab-buttons">
         <button class="tab-btn active">LISTA DE COMPRAS</button>
         <button class="tab-btn">Planilha1</button>
@@ -458,7 +548,7 @@
             <span class="footer-number" id="footerSaldo">R$ 0,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 1.2.0 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 1.3.0 · Novidades</div>
 
     <!-- MODAL DO CHANGELOG -->
     <div class="modal-overlay" id="changelogModal">
@@ -469,46 +559,89 @@
             </div>
             <ul class="changelog-list">
                 <li class="changelog-item">
-                    <div class="version">v1.2.0</div>
+                    <div class="version">v1.3.0</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
-                        ✨ **Novidades**:
+                        ✨ **Melhorias**:
+                        <ul>
+                            <li>Quebra de texto na coluna ITEM (agora com contenteditable).</li>
+                            <li>Teclado numérico no campo Qtd.</li>
+                            <li>Calculadora integrada no preço unitário.</li>
+                            <li>Confirmação ao alterar o orçamento.</li>
+                            <li>Layout ajustado para evitar rolagem horizontal.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
+                    <div class="version">v1.2.0</div>
+                    <div class="version-date">15/02/2026</div>
+                    <div class="version-desc">
+                        🚀 **Melhorias**:
                         <ul>
                             <li>Nome do app alterado para "Compra Fácil".</li>
-                            <li>Adicionado modal de changelog com versões escalonáveis.</li>
-                            <li>Melhorias na responsividade para iPhone.</li>
-                            <li>Pequenos ajustes de estilo nos totais.</li>
+                            <li>Adicionado modal de changelog.</li>
                         </ul>
                     </div>
                 </li>
                 <li class="changelog-item">
                     <div class="version">v1.1.0</div>
-                    <div class="version-date">15/02/2026</div>
-                    <div class="version-desc">
-                        🚀 **Melhorias**:
-                        <ul>
-                            <li>Campo de orçamento agora editável diretamente.</li>
-                            <li>Persistência de dados com localStorage.</li>
-                            <li>Botões de aba com feedback visual.</li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="changelog-item">
-                    <div class="version">v1.0.0</div>
-                    <div class="version-date">01/02/2026</div>
+                    <div class="version-date">10/02/2026</div>
                     <div class="version-desc">
                         ✅ **Versão inicial**:
                         <ul>
                             <li>Lista de compras com itens, preço, quantidade e total.</li>
                             <li>Cálculo automático do total gasto e diferença do orçamento.</li>
                             <li>Tema claro/escuro.</li>
-                            <li>Interface inspirada no print do Excel.</li>
+                            <li>Persistência com localStorage.</li>
                         </ul>
                     </div>
                 </li>
             </ul>
             <div style="text-align: right; margin-top: 16px;">
                 <button class="btn-add" style="width: auto; padding: 10px 24px; margin:0;" id="closeChangelogBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DA CALCULADORA -->
+    <div class="modal-overlay" id="calcModal">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="calc-header">
+                <span>🧮 Calculadora de Preço</span>
+                <button class="close-modal" id="closeCalc">&times;</button>
+            </div>
+            <div class="calc-display" id="calcDisplay">0</div>
+            <div class="calc-grid">
+                <button class="calc-btn" data-calc="7">7</button>
+                <button class="calc-btn" data-calc="8">8</button>
+                <button class="calc-btn" data-calc="9">9</button>
+                <button class="calc-btn operador" data-calc="/">÷</button>
+                <button class="calc-btn" data-calc="4">4</button>
+                <button class="calc-btn" data-calc="5">5</button>
+                <button class="calc-btn" data-calc="6">6</button>
+                <button class="calc-btn operador" data-calc="*">×</button>
+                <button class="calc-btn" data-calc="1">1</button>
+                <button class="calc-btn" data-calc="2">2</button>
+                <button class="calc-btn" data-calc="3">3</button>
+                <button class="calc-btn operador" data-calc="-">-</button>
+                <button class="calc-btn" data-calc="0">0</button>
+                <button class="calc-btn" data-calc=",">,</button>
+                <button class="calc-btn igual" data-calc="=">=</button>
+                <button class="calc-btn operador" data-calc="+">+</button>
+                <button class="calc-btn" data-calc="C" style="grid-column: span 2;">C</button>
+                <button class="calc-btn" data-calc="⌫" style="grid-column: span 2;">⌫</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO DO ORÇAMENTO -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content" style="max-width: 320px; text-align: center;">
+            <h3 style="margin-bottom: 20px;">Confirmar alteração</h3>
+            <p id="confirmMessage" style="margin-bottom: 30px; color: var(--text-soft);">Deseja alterar o orçamento?</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn-add" id="confirmYes" style="flex:1; background: var(--btn-green);">Sim</button>
+                <button class="btn-add" id="confirmNo" style="flex:1; background: var(--btn-red);">Não</button>
             </div>
         </div>
     </div>
@@ -532,8 +665,9 @@
             // ---------- ESTADO ----------
             let itens = [];
             let orcamento = 3200.00;
+            let orcamentoAntes = 3200.00; // para confirmação
 
-            // Elementos
+            // Elementos principais
             const tbody = document.getElementById('tableBody');
             const budgetInput = document.getElementById('budgetInput');
             const totalGastoDisplay = document.getElementById('totalGastoDisplay');
@@ -544,10 +678,23 @@
             const themeToggle = document.getElementById('themeToggle');
             const addBtn = document.getElementById('addItemBtn');
             const toastEl = document.getElementById('toast');
-            const modal = document.getElementById('changelogModal');
+
+            // Modais
+            const changelogModal = document.getElementById('changelogModal');
             const showChangelog = document.getElementById('showChangelog');
             const closeChangelog = document.getElementById('closeChangelog');
             const closeChangelogBtn = document.getElementById('closeChangelogBtn');
+            const calcModal = document.getElementById('calcModal');
+            const closeCalc = document.getElementById('closeCalc');
+            const calcDisplay = document.getElementById('calcDisplay');
+            const confirmModal = document.getElementById('confirmModal');
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
+            const confirmMessage = document.getElementById('confirmMessage');
+
+            // Estado da calculadora
+            let currentPrecoInput = null;
+            let calcExpression = '';
 
             // ---------- AMOSTRA INICIAL ----------
             const amostra = [
@@ -574,6 +721,7 @@
                 footerBudget.innerText = formatarMoeda(orcamento);
                 footerGasto.innerText = formatarMoeda(totalGasto);
                 footerSaldo.innerText = formatarMoeda(diferenca);
+                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
             }
 
             function salvarNoStorage() {
@@ -595,33 +743,35 @@
                 } else {
                     orcamento = 3200.00;
                 }
+                orcamentoAntes = orcamento;
                 budgetInput.value = orcamento.toFixed(2).replace('.', ',');
                 atualizarTotais();
             }
 
+            // Função para renderizar tabela (agora com contenteditable para nome e inputmode numérico)
             function renderizarTabela() {
                 tbody.innerHTML = '';
                 itens.forEach((item, index) => {
                     const tr = document.createElement('tr');
                     const totalItem = item.preco * item.qtd;
 
-                    // Nome
+                    // Nome (contenteditable para quebra de texto)
                     const tdNome = document.createElement('td');
                     tdNome.className = 'col-prod';
-                    const inputNome = document.createElement('input');
-                    inputNome.type = 'text';
-                    inputNome.value = item.nome;
-                    inputNome.placeholder = 'Item';
-                    inputNome.dataset.index = index;
-                    inputNome.dataset.field = 'nome';
-                    inputNome.addEventListener('input', function(e) {
+                    const nomeDiv = document.createElement('div');
+                    nomeDiv.className = 'produto-editavel';
+                    nomeDiv.contentEditable = 'true';
+                    nomeDiv.innerText = item.nome;
+                    nomeDiv.dataset.index = index;
+                    nomeDiv.dataset.field = 'nome';
+                    nomeDiv.addEventListener('input', function(e) {
                         const idx = e.target.dataset.index;
-                        itens[idx].nome = e.target.value;
+                        itens[idx].nome = e.target.innerText;
                         salvarNoStorage();
                     });
-                    tdNome.appendChild(inputNome);
+                    tdNome.appendChild(nomeDiv);
 
-                    // Preço
+                    // Preço (com calculadora)
                     const tdPreco = document.createElement('td');
                     tdPreco.className = 'col-preco';
                     const inputPreco = document.createElement('input');
@@ -629,31 +779,24 @@
                     inputPreco.value = item.preco.toFixed(2).replace('.', ',');
                     inputPreco.className = 'preco-input';
                     inputPreco.dataset.index = index;
-                    inputPreco.dataset.field = 'preco';
-                    inputPreco.addEventListener('input', function(e) {
-                        const idx = e.target.dataset.index;
-                        const val = parseMoeda(e.target.value);
-                        itens[idx].preco = isNaN(val) ? 0 : val;
-                        e.target.value = itens[idx].preco.toFixed(2).replace('.', ',');
-                        salvarNoStorage();
-                        renderizarTabela();
-                        atualizarTotais();
-                    });
-                    inputPreco.addEventListener('blur', function(e) {
-                        const idx = e.target.dataset.index;
-                        e.target.value = itens[idx].preco.toFixed(2).replace('.', ',');
+                    inputPreco.readOnly = true; // para abrir calculadora
+                    inputPreco.addEventListener('click', function(e) {
+                        currentPrecoInput = e.target;
+                        calcExpression = e.target.value.replace(',', '.') || '0';
+                        calcDisplay.innerText = calcExpression.replace('.', ',');
+                        calcModal.style.display = 'flex';
                     });
                     tdPreco.appendChild(inputPreco);
 
-                    // Quantidade
+                    // Quantidade (com inputmode decimal)
                     const tdQtd = document.createElement('td');
                     tdQtd.className = 'col-qtd';
                     const inputQtd = document.createElement('input');
                     inputQtd.type = 'text';
+                    inputQtd.inputMode = 'decimal';
                     inputQtd.value = item.qtd;
                     inputQtd.className = 'qtd-input';
                     inputQtd.dataset.index = index;
-                    inputQtd.dataset.field = 'qtd';
                     inputQtd.addEventListener('input', function(e) {
                         const idx = e.target.dataset.index;
                         let val = parseMoeda(e.target.value);
@@ -661,7 +804,7 @@
                         itens[idx].qtd = val;
                         e.target.value = val;
                         salvarNoStorage();
-                        renderizarTabela();
+                        renderizarTabela(); // atualiza total linha
                         atualizarTotais();
                     });
                     inputQtd.addEventListener('blur', function(e) {
@@ -681,7 +824,6 @@
                     const btnDel = document.createElement('button');
                     btnDel.className = 'delete-btn';
                     btnDel.innerHTML = '🗑️';
-                    btnDel.setAttribute('aria-label', 'Remover');
                     btnDel.dataset.index = index;
                     btnDel.addEventListener('click', function(e) {
                         const idx = e.currentTarget.dataset.index;
@@ -711,19 +853,105 @@
                 }, 2000);
             }
 
-            // ---------- EVENTOS ----------
-            budgetInput.addEventListener('input', function(e) {
-                let val = parseMoeda(e.target.value);
-                if (isNaN(val) || val < 0) val = 0;
-                orcamento = val;
-                e.target.value = orcamento.toFixed(2).replace('.', ',');
-                salvarNoStorage();
-                atualizarTotais();
-            });
-            budgetInput.addEventListener('blur', function(e) {
-                e.target.value = orcamento.toFixed(2).replace('.', ',');
+            // ---------- LÓGICA DA CALCULADORA ----------
+            function calcularExpressao(expr) {
+                try {
+                    expr = expr.replace(/,/g, '.').replace(/×/g, '*').replace(/÷/g, '/');
+                    // segurança: permite apenas números e operadores
+                    if (!/^[0-9+\-*/.]+$/.test(expr)) return 'Erro';
+                    return new Function('return ' + expr)();
+                } catch {
+                    return 'Erro';
+                }
+            }
+
+            // Eventos da calculadora
+            document.querySelectorAll('[data-calc]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const val = e.target.dataset.calc;
+                    if (val === 'C') {
+                        calcExpression = '';
+                    } else if (val === '⌫') {
+                        calcExpression = calcExpression.slice(0, -1);
+                    } else if (val === '=') {
+                        let result = calcularExpressao(calcExpression);
+                        if (result === 'Erro') {
+                            calcDisplay.innerText = 'Erro';
+                            setTimeout(() => calcDisplay.innerText = calcExpression.replace('.', ',') || '0', 800);
+                            return;
+                        }
+                        result = Math.round(result * 100) / 100;
+                        calcExpression = result.toString();
+                        calcDisplay.innerText = result.toString().replace('.', ',');
+                    } else {
+                        calcExpression += val;
+                    }
+                    calcDisplay.innerText = calcExpression.replace('.', ',') || '0';
+                });
             });
 
+            // Fechar calculadora e salvar no campo
+            closeCalc.addEventListener('click', () => {
+                calcModal.style.display = 'none';
+            });
+            // Ao clicar fora, também fecha
+            window.addEventListener('click', (e) => {
+                if (e.target === calcModal) {
+                    if (currentPrecoInput) {
+                        // Se há expressão, salva o resultado final?
+                        // Por simplicidade, ao fechar, usamos o valor atual do display
+                        let valor = calcDisplay.innerText.replace(',', '.');
+                        let num = parseFloat(valor);
+                        if (!isNaN(num)) {
+                            currentPrecoInput.value = num.toFixed(2).replace('.', ',');
+                            const idx = currentPrecoInput.dataset.index;
+                            itens[idx].preco = num;
+                            salvarNoStorage();
+                            renderizarTabela();
+                        }
+                    }
+                    calcModal.style.display = 'none';
+                }
+            });
+
+            // ---------- CONFIRMAÇÃO DO ORÇAMENTO ----------
+            let orcamentoNovo = null;
+            budgetInput.addEventListener('focus', function() {
+                orcamentoAntes = orcamento; // guarda antes da edição
+            });
+            budgetInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    budgetInput.blur();
+                }
+            });
+            budgetInput.addEventListener('blur', function() {
+                let val = parseMoeda(budgetInput.value);
+                if (isNaN(val) || val < 0) val = 0;
+                orcamentoNovo = val;
+                if (orcamentoNovo !== orcamento) {
+                    confirmMessage.innerText = `Deseja alterar o orçamento de ${formatarMoeda(orcamento)} para ${formatarMoeda(orcamentoNovo)}?`;
+                    confirmModal.style.display = 'flex';
+                } else {
+                    budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                }
+            });
+
+            confirmYes.addEventListener('click', () => {
+                if (orcamentoNovo !== null) {
+                    orcamento = orcamentoNovo;
+                    salvarNoStorage();
+                    atualizarTotais();
+                    mostrarToast('Orçamento atualizado');
+                }
+                confirmModal.style.display = 'none';
+            });
+            confirmNo.addEventListener('click', () => {
+                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                confirmModal.style.display = 'none';
+            });
+
+            // ---------- EVENTOS GERAIS ----------
             addBtn.addEventListener('click', function() {
                 itens.push({ nome: 'Novo item', preco: 0.00, qtd: 1 });
                 salvarNoStorage();
@@ -744,15 +972,15 @@
 
             // Changelog modal
             showChangelog.addEventListener('click', () => {
-                modal.style.display = 'flex';
+                changelogModal.style.display = 'flex';
             });
-            function fecharModal() {
-                modal.style.display = 'none';
+            function fecharChangelog() {
+                changelogModal.style.display = 'none';
             }
-            closeChangelog.addEventListener('click', fecharModal);
-            closeChangelogBtn.addEventListener('click', fecharModal);
+            closeChangelog.addEventListener('click', fecharChangelog);
+            closeChangelogBtn.addEventListener('click', fecharChangelog);
             window.addEventListener('click', (e) => {
-                if (e.target === modal) fecharModal();
+                if (e.target === changelogModal) fecharChangelog();
             });
 
             // Abas (simulação)
@@ -762,6 +990,14 @@
                     this.classList.add('active');
                     mostrarToast('Aba: ' + this.innerText);
                 });
+            });
+
+            // Fechar modal de confirmação ao clicar fora
+            window.addEventListener('click', (e) => {
+                if (e.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                    budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                }
             });
 
             // Inicializar
