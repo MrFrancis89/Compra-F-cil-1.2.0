@@ -17,11 +17,12 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            padding: 16px 12px 30px;
+            padding: 16px 12px 90px; /* padding inferior para o FAB */
             transition: background-color 0.3s, color 0.3s;
             min-height: 100vh;
             font-weight: 500;
             -webkit-font-smoothing: antialiased;
+            position: relative;
         }
 
         :root {
@@ -40,7 +41,8 @@
             --header-bg: #2d3748;
             --btn-star: #855C1B;   
             --btn-cyan: #0e7490;
-            --accent-neon: #0aff84; /* para o comparador */
+            --accent-neon: #0aff84;
+            --fab-bg: #1e40af;
         }
 
         body.light-mode {
@@ -60,6 +62,7 @@
             --btn-star: #b47e19;
             --btn-cyan: #0b5e7a;
             --accent-neon: #0f7b4a;
+            --fab-bg: #1e40af;
         }
 
         /* ----- CABEÇALHO COM TÍTULO E TEMA ----- */
@@ -142,7 +145,46 @@
             border-bottom: 1px dashed var(--border);
         }
 
-        /* ----- BOTÕES GLOBAIS DE ZERAR ----- */
+        /* ----- ABAS ----- */
+        .tab-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 12px 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background-color: var(--btn-red);
+            color: white;
+            border-color: var(--btn-red);
+        }
+        .tab-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ----- CONTEÚDO DAS ABAS ----- */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ----- BOTÕES GLOBAIS DE ZERAR (dentro da aba lista) ----- */
         .global-actions {
             display: flex;
             gap: 10px;
@@ -173,7 +215,7 @@
             background-color: var(--btn-cyan);
         }
 
-        /* ----- TABELA (itens) com larguras fixas e suporte a swipe ----- */
+        /* ----- TABELA (itens) ----- */
         .table-wrapper {
             background-color: var(--card);
             border: 1px solid var(--border);
@@ -237,7 +279,7 @@
             box-shadow: 0 0 0 2px rgba(107,114,128,0.2);
         }
 
-        input, .input-simulado {
+        input {
             background-color: var(--input-bg);
             border: 1px solid var(--border);
             border-radius: 10px;
@@ -312,59 +354,36 @@
             background-color: var(--btn-red);
         }
 
-        /* ----- BOTÃO ADICIONAR NOVO ITEM ----- */
-        .btn-add {
-            background-color: var(--btn-blue);
-            color: white;
-            border: none;
-            border-radius: 40px;
-            padding: 16px 20px;
-            font-size: 1rem;
-            font-weight: 700;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.1s, background 0.2s;
+        /* ----- COMPARADOR (aba separada) ----- */
+        .comparador-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .btn-add:active {
-            transform: scale(0.97);
-            background-color: var(--btn-amber);
-        }
-
-        /* ----- COMPARADOR DE PREÇOS ----- */
         .comparador-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--accent-neon);
-            margin: 25px 0 15px;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
             text-align: center;
         }
-
-        .comparador-grid {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
         .produto-card {
-            flex: 1;
-            min-width: 220px;
-            background: var(--card);
+            background: var(--highlight);
             border: 1px solid var(--border);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 16px;
         }
-        .produto-card .product-header {
+        .product-header {
             color: var(--accent);
             font-size: 0.8rem;
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 700;
-            letter-spacing: 0.5px;
         }
         .linha-input {
             display: flex;
@@ -386,7 +405,6 @@
         .linha-input input, .linha-input select {
             height: 48px;
         }
-
         .btn-calcular {
             background-color: var(--accent-neon);
             color: #000;
@@ -395,21 +413,20 @@
             border-radius: 40px;
             padding: 16px 30px;
             font-size: 1.1rem;
-            margin: 20px 0 10px;
             width: 100%;
             text-transform: uppercase;
             box-shadow: 0 4px 15px rgba(10,255,132,0.3);
+            margin: 10px 0;
         }
         .btn-calcular:active {
             transform: scale(0.97);
         }
-
         #comparadorResultado {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 20px;
-            margin: 15px 0 30px;
+            margin-top: 15px;
             text-align: center;
             display: none;
         }
@@ -429,6 +446,33 @@
             font-weight: bold;
             font-size: 1.2rem;
             border: 1px solid rgba(10, 255, 132, 0.3);
+        }
+
+        /* ----- BOTÃO FLUTUANTE (FAB) ----- */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+            background-color: var(--fab-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 2px solid var(--border);
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            z-index: 1000;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fab:active {
+            transform: scale(0.9);
+            background-color: var(--btn-green);
         }
 
         /* ----- RODAPÉ COM TOTAIS E LINK DO CHANGELOG ----- */
@@ -479,7 +523,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000;
             padding: 16px;
         }
         .modal-content {
@@ -535,10 +579,6 @@
             color: var(--text-soft);
             line-height: 1.5;
             white-space: pre-line;
-        }
-        .version-desc ul {
-            margin-left: 20px;
-            margin-top: 5px;
         }
 
         /* Calculadora */
@@ -636,7 +676,7 @@
             justify-content: center;
         }
 
-        /* Modal de confirmação */
+        /* Confirmação */
         .confirm-box {
             background: var(--card);
             border: 1px solid var(--border);
@@ -660,7 +700,7 @@
 
         .toast-message {
             position: fixed;
-            bottom: 30px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.8);
@@ -668,7 +708,7 @@
             padding: 12px 24px;
             border-radius: 40px;
             font-size: 0.9rem;
-            z-index: 999;
+            z-index: 3000;
             transition: opacity 0.3s;
             pointer-events: none;
         }
@@ -676,11 +716,11 @@
 </head>
 <body>
     <div class="header-container">
-        <h1>🛒 Compra Fácil <span class="versao-titulo" id="versaoTitulo">v1.7.0</span></h1>
+        <h1>🛒 Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.0.0</span></h1>
         <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌓</button>
     </div>
 
-    <!-- PAINEL DOS 3 VALORES -->
+    <!-- PAINEL DE TOTAIS (sempre visível) -->
     <div class="totals-panel">
         <div class="total-card">
             <div class="total-label">ORÇAMENTO</div>
@@ -698,96 +738,101 @@
         </div>
     </div>
 
-    <!-- BOTÕES GLOBAIS -->
-    <div class="global-actions">
-        <button class="global-btn preco" id="zerarPrecosBtn">Zerar Preços</button>
-        <button class="global-btn qtd" id="zerarQuantidadesBtn">Zerar Quantidades</button>
+    <!-- ABAS -->
+    <div class="tab-bar">
+        <div class="tab-btn active" data-tab="lista">📋 Lista</div>
+        <div class="tab-btn" data-tab="comparador">🔍 Comparador</div>
     </div>
 
-    <!-- TABELA DE COMPRAS -->
-    <div class="table-wrapper" id="tableWrapper">
-        <div id="swipe-bg"></div>
-        <table id="comprasTable">
-            <thead>
-                <tr>
-                    <th class="col-prod">ITEM</th>
-                    <th class="col-preco">PREÇO UNIT.</th>
-                    <th class="col-qtd">QTD</th>
-                    <th class="col-total">TOTAL</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-
-    <!-- BOTÃO ADICIONAR -->
-    <button class="btn-add" id="addItemBtn">+ NOVO ITEM</button>
-
-    <!-- ========== COMPARADOR DE PREÇOS ========== -->
-    <div class="comparador-title">📊 Comparador de Preços</div>
-    <div class="comparador-grid">
-        <!-- Produto 1 -->
-        <div class="produto-card">
-            <div class="product-header">Produto 1</div>
-            <div class="linha-input">
-                <div class="col">
-                    <label>Preço</label>
-                    <input type="text" class="preco-input" id="comp_p1" placeholder="R$ 0,00" readonly>
-                </div>
-                <div class="col">
-                    <label>Qtd</label>
-                    <input type="text" inputmode="decimal" id="comp_q1" placeholder="0" class="qtd-input">
-                </div>
-            </div>
-            <div class="linha-input">
-                <div class="col">
-                    <label>Unidade</label>
-                    <select id="comp_u1">
-                        <option value="kg">kg</option>
-                        <option value="g">g</option>
-                        <option value="l">L</option>
-                        <option value="ml">ml</option>
-                        <option value="un">un</option>
-                    </select>
-                </div>
-                <div class="col"><!-- espaçamento --></div>
-            </div>
+    <!-- ABA LISTA -->
+    <div id="tab-lista" class="tab-content active">
+        <div class="global-actions">
+            <button class="global-btn preco" id="zerarPrecosBtn">Zerar Preços</button>
+            <button class="global-btn qtd" id="zerarQuantidadesBtn">Zerar Quantidades</button>
         </div>
 
-        <!-- Produto 2 -->
-        <div class="produto-card">
-            <div class="product-header">Produto 2</div>
-            <div class="linha-input">
-                <div class="col">
-                    <label>Preço</label>
-                    <input type="text" class="preco-input" id="comp_p2" placeholder="R$ 0,00" readonly>
-                </div>
-                <div class="col">
-                    <label>Qtd</label>
-                    <input type="text" inputmode="decimal" id="comp_q2" placeholder="0" class="qtd-input">
-                </div>
-            </div>
-            <div class="linha-input">
-                <div class="col">
-                    <label>Unidade</label>
-                    <select id="comp_u2">
-                        <option value="kg">kg</option>
-                        <option value="g">g</option>
-                        <option value="l">L</option>
-                        <option value="ml">ml</option>
-                        <option value="un">un</option>
-                    </select>
-                </div>
-                <div class="col"><!-- espaçamento --></div>
-            </div>
+        <div class="table-wrapper" id="tableWrapper">
+            <div id="swipe-bg"></div>
+            <table id="comprasTable">
+                <thead>
+                    <tr>
+                        <th class="col-prod">ITEM</th>
+                        <th class="col-preco">PREÇO UNIT.</th>
+                        <th class="col-qtd">QTD</th>
+                        <th class="col-total">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
     </div>
 
-    <button class="btn-calcular" id="btnComparar">Comparar Preços</button>
+    <!-- ABA COMPARADOR -->
+    <div id="tab-comparador" class="tab-content">
+        <div class="comparador-container">
+            <div class="comparador-title">Comparar Preços</div>
 
-    <div id="comparadorResultado"></div>
+            <div class="produto-card">
+                <div class="product-header">Produto 1</div>
+                <div class="linha-input">
+                    <div class="col">
+                        <label>Preço (R$)</label>
+                        <input type="text" class="preco-input" id="comp_p1" placeholder="0,00" readonly>
+                    </div>
+                    <div class="col">
+                        <label>Quantidade</label>
+                        <input type="text" inputmode="decimal" id="comp_q1" placeholder="0" class="qtd-input">
+                    </div>
+                </div>
+                <div class="linha-input">
+                    <div class="col">
+                        <label>Unidade</label>
+                        <select id="comp_u1">
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="l">L</option>
+                            <option value="ml">ml</option>
+                            <option value="un">un</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-    <!-- ===== RODAPÉ ===== -->
+            <div class="produto-card">
+                <div class="product-header">Produto 2</div>
+                <div class="linha-input">
+                    <div class="col">
+                        <label>Preço (R$)</label>
+                        <input type="text" class="preco-input" id="comp_p2" placeholder="0,00" readonly>
+                    </div>
+                    <div class="col">
+                        <label>Quantidade</label>
+                        <input type="text" inputmode="decimal" id="comp_q2" placeholder="0" class="qtd-input">
+                    </div>
+                </div>
+                <div class="linha-input">
+                    <div class="col">
+                        <label>Unidade</label>
+                        <select id="comp_u2">
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="l">L</option>
+                            <option value="ml">ml</option>
+                            <option value="un">un</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-calcular" id="btnComparar">Comparar</button>
+            <div id="comparadorResultado"></div>
+        </div>
+    </div>
+
+    <!-- BOTÃO FLUTUANTE (FAB) -->
+    <div class="fab" id="fabAddItem">+</div>
+
+    <!-- RODAPÉ COM TOTAIS E LINK DO CHANGELOG -->
     <div class="footer-totals">
         <div class="footer-item">
             <span class="footer-label">ORÇADO</span>
@@ -802,37 +847,104 @@
             <span class="footer-number" id="footerSaldo">R$ 0,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 1.7.0 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 2.0.0 · Novidades</div>
 
     <!-- MODAIS -->
-    <div class="modal-overlay" id="changelogModal"><!-- conteúdo ... (igual ao anterior) --></div>
-    <div class="modal-overlay" id="calcModal"><!-- calculadora ... --></div>
-    <div class="modal-overlay" id="confirmModal"><!-- confirmação ... --></div>
+    <div class="modal-overlay" id="changelogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📜 Histórico de versões</h2>
+                <button class="close-modal" id="closeChangelog">&times;</button>
+            </div>
+            <ul class="changelog-list">
+                <li class="changelog-item">
+                    <div class="version">v2.0.0</div>
+                    <div class="version-date">24/02/2026</div>
+                    <div class="version-desc">
+                        ✨ **Novidades**:
+                        <ul>
+                            <li>Comparador de preços em aba separada.</li>
+                            <li>Botão flutuante (FAB) para adicionar itens.</li>
+                            <li>Interface reorganizada com abas.</li>
+                            <li>Correções gerais e melhorias de desempenho.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="changelog-item">
+                    <div class="version">v1.7.0</div>
+                    <div class="version-date">24/02/2026</div>
+                    <div class="version-desc">Versão anterior com comparador integrado.</div>
+                </li>
+            </ul>
+            <div style="text-align: right; margin-top: 16px;">
+                <button class="btn-add" style="width: auto; padding: 10px 24px; margin:0;" id="closeChangelogBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="calcModal">
+        <div class="calc-box">
+            <div class="calc-header">
+                <span id="calc-title">🧮 Calculadora</span>
+                <button class="calc-close" id="closeCalc">✖</button>
+            </div>
+            <div id="calc-display">0</div>
+            <div class="calc-grid">
+                <button class="calc-btn calc-bg-op" data-calc="C">C</button>
+                <button class="calc-btn calc-bg-op" data-calc="/">÷</button>
+                <button class="calc-btn calc-bg-op" data-calc="*">×</button>
+                <button class="calc-btn calc-bg-op" data-calc="BACK">⌫</button>
+                <button class="calc-btn" data-calc="7">7</button>
+                <button class="calc-btn" data-calc="8">8</button>
+                <button class="calc-btn" data-calc="9">9</button>
+                <button class="calc-btn calc-bg-op" data-calc="-">-</button>
+                <button class="calc-btn" data-calc="4">4</button>
+                <button class="calc-btn" data-calc="5">5</button>
+                <button class="calc-btn" data-calc="6">6</button>
+                <button class="calc-btn calc-bg-op" data-calc="+">+</button>
+                <button class="calc-btn" data-calc="1">1</button>
+                <button class="calc-btn" data-calc="2">2</button>
+                <button class="calc-btn" data-calc="3">3</button>
+                <button class="calc-btn calc-bg-confirm" style="grid-row: span 2;" data-calc="OK">OK</button>
+                <button class="calc-btn" data-calc="0" style="grid-column: span 2;">0</button>
+                <button class="calc-btn" data-calc=",">,</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <h3 id="confirmTitle">Confirmar</h3>
+            <p id="confirmMessage">Deseja realizar esta ação?</p>
+            <div class="confirm-buttons">
+                <button class="btn-add" id="confirmYes" style="flex:1; background: var(--btn-red);">Sim</button>
+                <button class="btn-add" id="confirmNo" style="flex:1; background: var(--btn-green);">Não</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast" class="toast-message" style="opacity:0;"> </div>
 
     <script>
         (function() {
-            // ---------- CONSTANTES ----------
-            const VERSAO_ATUAL = "v1.7.0";
+            const VERSAO_ATUAL = "v2.0.0";
 
-            // ---------- UTILITÁRIOS ----------
+            // Utilitários
             function formatarMoeda(valor) {
                 return 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             }
-
             function parseMoeda(str) {
                 if (!str) return 0;
                 let limpo = str.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
-                let num = parseFloat(limpo);
-                return isNaN(num) ? 0 : num;
+                return parseFloat(limpo) || 0;
             }
 
-            // ---------- ESTADO ----------
+            // Estado
             let itens = [];
             let orcamento = 3200.00;
             let orcamentoAntes = 3200.00;
 
-            // Elementos principais
+            // Elementos
             const tbody = document.getElementById('tableBody');
             const budgetInput = document.getElementById('budgetInput');
             const totalGastoDisplay = document.getElementById('totalGastoDisplay');
@@ -841,12 +953,16 @@
             const footerGasto = document.getElementById('footerGasto');
             const footerSaldo = document.getElementById('footerSaldo');
             const themeToggle = document.getElementById('themeToggle');
-            const addBtn = document.getElementById('addItemBtn');
+            const fabAdd = document.getElementById('fabAddItem');
             const toastEl = document.getElementById('toast');
             const versaoTitulo = document.getElementById('versaoTitulo');
             const showChangelogLink = document.getElementById('showChangelog');
             const zerarPrecosBtn = document.getElementById('zerarPrecosBtn');
             const zerarQuantidadesBtn = document.getElementById('zerarQuantidadesBtn');
+
+            // Abas
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
 
             // Comparador
             const compP1 = document.getElementById('comp_p1');
@@ -858,31 +974,31 @@
             const btnComparar = document.getElementById('btnComparar');
             const resultadoDiv = document.getElementById('comparadorResultado');
 
-            // Modais (simplificado - manter estrutura original, mas vou apenas referenciar)
+            // Modais
             const calcModal = document.getElementById('calcModal');
             const calcDisplay = document.getElementById('calc-display');
             const calcTitle = document.getElementById('calc-title');
+            const closeCalc = document.getElementById('closeCalc');
             const confirmModal = document.getElementById('confirmModal');
             const confirmTitle = document.getElementById('confirmTitle');
             const confirmMessage = document.getElementById('confirmMessage');
             const confirmYes = document.getElementById('confirmYes');
             const confirmNo = document.getElementById('confirmNo');
+            const changelogModal = document.getElementById('changelogModal');
+            const closeChangelog = document.getElementById('closeChangelog');
+            const closeChangelogBtn = document.getElementById('closeChangelogBtn');
 
-            // Para calculadora
+            // Swipe
+            const swipeBg = document.getElementById('swipe-bg');
+
+            // Estado da calculadora
             let currentPrecoInput = null;
             let calcExpression = '';
 
-            // Para confirmação
+            // Ação de confirmação
             let acaoConfirmar = null;
 
-            // ---------- CARREGAR MODELO DOS MODAIS (copiar do código anterior) ----------
-            // Por brevidade, manterei a estrutura, mas o conteúdo dos modais deve ser igual ao da versão 1.6.0
-            // Para não repetir todo o HTML, assumo que os modais estão completos no HTML final.
-            // Numa resposta real, incluiria o conteúdo completo. Aqui vou resumir, mas na prática o código deve conter os modais.
-
-            // Vou criar os modais dinamicamente? Não, eles já devem estar no HTML. Para este exemplo, vou considerar que estão lá.
-
-            // ---------- AMOSTRA INICIAL ----------
+            // ---------- DADOS INICIAIS ----------
             const amostra = [
                 { nome: 'Manjericão', preco: 2.89, qtd: 4 },
                 { nome: 'Mostarda cepeta', preco: 17.80, qtd: 2 },
@@ -893,15 +1009,13 @@
             ];
             itens = amostra.map(i => ({ ...i }));
 
-            // ---------- FUNÇÕES DA LISTA (adaptadas da v1.6.0) ----------
+            // ---------- FUNÇÕES DA LISTA ----------
             function ordenarItens() {
                 itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
             }
-
             function calcularTotalGasto() {
                 return itens.reduce((acc, item) => acc + (item.preco * item.qtd), 0);
             }
-
             function atualizarTotais() {
                 const totalGasto = calcularTotalGasto();
                 const diferenca = orcamento - totalGasto;
@@ -912,12 +1026,10 @@
                 footerSaldo.innerText = formatarMoeda(diferenca);
                 budgetInput.value = orcamento.toFixed(2).replace('.', ',');
             }
-
             function salvarNoStorage() {
                 localStorage.setItem('compraFacil_itens', JSON.stringify(itens));
                 localStorage.setItem('compraFacil_orcamento', orcamento.toString());
             }
-
             function carregarStorage() {
                 const itensSalvos = localStorage.getItem('compraFacil_itens');
                 if (itensSalvos) {
@@ -930,18 +1042,14 @@
                 if (orcSalvo) {
                     orcamento = parseFloat(orcSalvo);
                     if (isNaN(orcamento)) orcamento = 3200.00;
-                } else {
-                    orcamento = 3200.00;
                 }
                 orcamentoAntes = orcamento;
                 budgetInput.value = orcamento.toFixed(2).replace('.', ',');
                 atualizarTotais();
             }
-
             function atualizarTotalLinha(tr, index) {
                 const totalCell = tr.querySelector('.col-total');
-                const item = itens[index];
-                totalCell.innerText = formatarMoeda(item.preco * item.qtd);
+                totalCell.innerText = formatarMoeda(itens[index].preco * itens[index].qtd);
             }
 
             function renderizarTabela() {
@@ -1029,13 +1137,11 @@
             // ---------- SWIPE ----------
             let swipeStartX, swipeStartY, swipeCurrentX, isSwiping = false, swipedRow = null;
             const swipeWidth = 80;
-            const swipeBg = document.getElementById('swipe-bg');
 
             function initSwipe() {
                 const rows = document.querySelectorAll('#tableBody tr');
                 swipeBg.innerHTML = `<button class="swipe-btn swipe-btn-excluir">🗑️ Apagar</button>`;
                 swipeBg.style.width = swipeWidth + 'px';
-                swipeBg.style.display = 'none';
 
                 function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
                 function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
@@ -1122,7 +1228,7 @@
                 }, { passive: true });
             }
 
-            // ---------- CALCULADORA (mesma lógica) ----------
+            // ---------- CALCULADORA ----------
             document.querySelectorAll('[data-calc]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const val = e.target.dataset.calc;
@@ -1143,6 +1249,9 @@
                                     const row = currentPrecoInput.closest('tr');
                                     if (row) atualizarTotalLinha(row, idx);
                                     atualizarTotais();
+                                } else {
+                                    // Para campos do comparador (não têm index)
+                                    // Não precisa salvar na lista
                                 }
                             } catch (er) {
                                 calcDisplay.innerText = 'Erro';
@@ -1159,7 +1268,12 @@
                 });
             });
 
-            // ---------- CONFIRMAÇÃO GENÉRICA ----------
+            closeCalc.addEventListener('click', () => calcModal.style.display = 'none');
+            window.addEventListener('click', (e) => {
+                if (e.target === calcModal) calcModal.style.display = 'none';
+            });
+
+            // ---------- CONFIRMAÇÃO ----------
             confirmYes.addEventListener('click', () => {
                 if (acaoConfirmar) acaoConfirmar();
                 confirmModal.style.display = 'none';
@@ -1167,6 +1281,12 @@
             confirmNo.addEventListener('click', () => {
                 confirmModal.style.display = 'none';
                 acaoConfirmar = null;
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                    acaoConfirmar = null;
+                }
             });
 
             // ---------- BOTÕES GLOBAIS ----------
@@ -1181,7 +1301,6 @@
                 };
                 confirmModal.style.display = 'flex';
             });
-
             zerarQuantidadesBtn.addEventListener('click', () => {
                 confirmTitle.innerText = 'Zerar quantidades';
                 confirmMessage.innerText = 'Definir todas as quantidades como 0?';
@@ -1211,7 +1330,6 @@
                         atualizarTotais();
                     };
                     confirmModal.style.display = 'flex';
-                    // Se cancelar, restaura o valor antigo
                     const oldVal = orcamento;
                     const cancelHandler = () => {
                         budgetInput.value = oldVal.toFixed(2).replace('.', ',');
@@ -1224,7 +1342,6 @@
             });
 
             // ---------- COMPARADOR ----------
-            // Adicionar calculadora aos campos de preço do comparador
             [compP1, compP2].forEach(input => {
                 input.addEventListener('click', function() {
                     currentPrecoInput = this;
@@ -1237,9 +1354,7 @@
 
             function normalizarUnidade(qtd, unidade) {
                 if (unidade === 'kg' || unidade === 'l') return qtd * 1000;
-                if (unidade === 'g' || unidade === 'ml') return qtd;
-                if (unidade === 'un') return qtd;
-                return qtd; // fallback
+                return qtd;
             }
 
             btnComparar.addEventListener('click', function() {
@@ -1282,8 +1397,27 @@
                 resultadoDiv.style.display = 'block';
             });
 
+            // ---------- FAB ----------
+            fabAdd.addEventListener('click', () => {
+                itens.push({ nome: 'Novo item', preco: 0, qtd: 1 });
+                salvarNoStorage();
+                renderizarTabela();
+                mostrarToast('Item adicionado');
+            });
+
+            // ---------- ABAS ----------
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const tabId = btn.dataset.tab;
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
+            });
+
             // ---------- TEMA ----------
-            themeToggle.addEventListener('click', function() {
+            themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('light-mode');
                 localStorage.setItem('compraFacil_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
             });
@@ -1294,11 +1428,17 @@
             // ---------- VERSÃO E CHANGELOG ----------
             versaoTitulo.innerText = VERSAO_ATUAL;
             showChangelogLink.innerText = `📋 Versão ${VERSAO_ATUAL} · Novidades`;
-            // Abrir changelog (modal) - simplificado
-            document.getElementById('showChangelog').addEventListener('click', () => {
-                document.getElementById('changelogModal').style.display = 'flex';
+            showChangelogLink.addEventListener('click', () => {
+                changelogModal.style.display = 'flex';
             });
-            // Fechar changelog (botões close) - necessário implementar no HTML
+            function fecharChangelog() {
+                changelogModal.style.display = 'none';
+            }
+            closeChangelog.addEventListener('click', fecharChangelog);
+            closeChangelogBtn.addEventListener('click', fecharChangelog);
+            window.addEventListener('click', (e) => {
+                if (e.target === changelogModal) fecharChangelog();
+            });
 
             function mostrarToast(msg) {
                 toastEl.style.opacity = '1';
@@ -1306,14 +1446,10 @@
                 setTimeout(() => toastEl.style.opacity = '0', 2000);
             }
 
-            // ---------- INICIALIZAR ----------
+            // Inicializar
             carregarStorage();
             renderizarTabela();
         })();
     </script>
-
-    <!-- Por brevidade, os modais (changelog, calc, confirm) devem estar completos no HTML final.
-         Como o código é longo, recomendo manter a estrutura da versão 1.6.0 e apenas adicionar os novos elementos do comparador.
-         O código acima é uma representação fiel da integração. -->
 </body>
 </html>
