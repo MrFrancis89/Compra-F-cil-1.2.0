@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Compra Fácil · Design Refinado</title>
+    <title>Compra Fácil v2.2.1</title>
     <style>
         /* ----- VARIÁVEIS (paleta sóbria e elegante) ----- */
         * {
@@ -175,21 +175,18 @@
             display: block;
         }
 
-        /* ----- BOTÕES GLOBAIS (agora com wrap para caber) ----- */
+        /* ----- BOTÕES GLOBAIS (3 botões) ----- */
         .global-actions {
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 20px;
-            justify-content: center;
         }
         .global-btn {
-            flex: 1 1 auto;
-            min-width: 110px; /* garante que o texto não seja cortado */
+            flex: 1;
             background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 14px 8px;
+            padding: 14px 5px;
             font-size: 0.8rem;
             font-weight: 500;
             color: var(--text);
@@ -198,9 +195,7 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: var(--shadow);
-            white-space: normal; /* permite quebra de linha */
-            word-break: break-word;
-            text-align: center;
+            white-space: nowrap;
         }
         .global-btn:active {
             transform: scale(0.98);
@@ -688,7 +683,7 @@
         </div>
         <div class="total-card">
             <div class="total-label">Diferença</div>
-            <div class="total-value" id="diferencaDisplay">R$ 0,00</div>
+            <div class="total-value" id="diferencaDisplay">R$ 3.000,00</div>
         </div>
     </div>
 
@@ -700,7 +695,7 @@
 
     <!-- ABA LISTA -->
     <div id="tab-lista" class="tab-content active">
-        <!-- Três botões de zerar (agora com wrap) -->
+        <!-- Três botões de zerar -->
         <div class="global-actions">
             <button class="global-btn preco" id="zerarPrecosBtn">Zerar Preços</button>
             <button class="global-btn qtd" id="zerarQuantidadesBtn">Zerar Quantidades</button>
@@ -800,7 +795,7 @@
         </div>
         <div class="footer-item">
             <span class="footer-label">Saldo</span>
-            <span class="footer-number" id="footerSaldo">R$ 0,00</span>
+            <span class="footer-number" id="footerSaldo">R$ 3.200,00</span>
         </div>
     </div>
     <div class="version-link" id="showChangelog">📋 Versão 2.2.1 · Novidades</div>
@@ -817,23 +812,17 @@
                     <div class="version">v2.2.1</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
-                        ✨ **Ajuste de layout**:
+                        ✨ **Melhorias**:
                         <ul>
-                            <li>Botões de ação agora com flex-wrap e min-width para caber em qualquer tela sem cortes.</li>
+                            <li>Formatação de moeda agora exibe ponto como separador de milhar (ex: R$ 1.000,00).</li>
+                            <li>Campo de orçamento formatado ao perder o foco e limpo ao ganhar foco para facilitar edição.</li>
                         </ul>
                     </div>
                 </li>
                 <li class="changelog-item">
                     <div class="version">v2.2.0</div>
                     <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">
-                        ✨ **Melhorias**:
-                        <ul>
-                            <li>Campo de orçamento com teclado numérico.</li>
-                            <li>Novo botão "Zerar Itens".</li>
-                            <li>Calculadora corrigida (substitui zero inicial).</li>
-                        </ul>
-                    </div>
+                    <div class="version-desc">Botão "Zerar Itens", teclado numérico, calculadora corrigida.</div>
                 </li>
             </ul>
             <div style="text-align: right; margin-top: 20px;">
@@ -893,6 +882,12 @@
             function formatarMoeda(valor) {
                 return 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             }
+
+            // Formata valor sem o símbolo R$ (para input)
+            function formatarNumeroInput(valor) {
+                return valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            }
+
             function parseMoeda(str) {
                 if (!str) return 0;
                 let limpo = str.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
@@ -985,7 +980,8 @@
                 footerBudget.innerText = formatarMoeda(orcamento);
                 footerGasto.innerText = formatarMoeda(totalGasto);
                 footerSaldo.innerText = formatarMoeda(diferenca);
-                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                // Atualiza o input com formatação (sem perder o foco)
+                budgetInput.value = formatarNumeroInput(orcamento);
             }
             function salvarNoStorage() {
                 localStorage.setItem('compraFacil_itens', JSON.stringify(itens));
@@ -1005,7 +1001,7 @@
                     if (isNaN(orcamento)) orcamento = 3200.00;
                 }
                 orcamentoAntes = orcamento;
-                budgetInput.value = orcamento.toFixed(2).replace('.', ',');
+                budgetInput.value = formatarNumeroInput(orcamento);
                 atualizarTotais();
             }
             function atualizarTotalLinha(tr, index) {
@@ -1189,7 +1185,7 @@
                 }, { passive: true });
             }
 
-            // Calculadora
+            // Calculadora (com zero substituído)
             document.querySelectorAll('[data-calc]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const val = e.target.dataset.calc;
@@ -1221,7 +1217,6 @@
                         }
                         calcModal.style.display = 'none';
                     } else {
-                        // Se a expressão atual é "0" ou vazia, e o dígito não é operador, substitui
                         if ((calcExpression === '' || calcExpression === '0') && !isNaN(val) && val !== '') {
                             calcExpression = val;
                         } else if (val === ',') {
@@ -1297,14 +1292,17 @@
                 confirmModal.style.display = 'flex';
             });
 
-            // Orçamento (com filtro para aceitar apenas números e vírgula)
+            // Orçamento com formatação
+            budgetInput.addEventListener('focus', function() {
+                // Remove a formatação para edição
+                this.value = orcamento.toFixed(2).replace('.', ',');
+            });
+
             budgetInput.addEventListener('input', function(e) {
+                // Permite apenas dígitos e vírgula
                 this.value = this.value.replace(/[^\d,]/g, '');
             });
-            budgetInput.addEventListener('focus', function() {
-                orcamentoAntes = orcamento;
-                this.value = '';
-            });
+
             budgetInput.addEventListener('blur', function() {
                 let val = parseMoeda(this.value);
                 if (isNaN(val) || val < 0) val = 0;
@@ -1319,12 +1317,12 @@
                     confirmModal.style.display = 'flex';
                     const oldVal = orcamento;
                     const cancelHandler = () => {
-                        budgetInput.value = oldVal.toFixed(2).replace('.', ',');
+                        budgetInput.value = formatarNumeroInput(oldVal);
                         confirmNo.removeEventListener('click', cancelHandler);
                     };
                     confirmNo.addEventListener('click', cancelHandler, { once: true });
                 } else {
-                    this.value = orcamento.toFixed(2).replace('.', ',');
+                    this.value = formatarNumeroInput(orcamento);
                 }
             });
 
