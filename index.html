@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Compra Fácil v2.2.1</title>
+    <title>Compra Fácil v2.2.2</title>
     <style>
-        /* ----- VARIÁVEIS (paleta sóbria e elegante) ----- */
+        /* (mesmo estilo da versão anterior, mantido) */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -665,7 +665,7 @@
 </head>
 <body class="light-mode">
     <div class="header-container">
-        <h1>Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.2.1</span></h1>
+        <h1>Compra Fácil <span class="versao-titulo" id="versaoTitulo">v2.2.2</span></h1>
         <button class="btn-theme" id="themeToggle" aria-label="Alternar tema">🌙</button>
     </div>
 
@@ -798,7 +798,7 @@
             <span class="footer-number" id="footerSaldo">R$ 3.200,00</span>
         </div>
     </div>
-    <div class="version-link" id="showChangelog">📋 Versão 2.2.1 · Novidades</div>
+    <div class="version-link" id="showChangelog">📋 Versão 2.2.2 · Novidades</div>
 
     <!-- MODAIS -->
     <div class="modal-overlay" id="changelogModal">
@@ -809,20 +809,20 @@
             </div>
             <ul class="changelog-list">
                 <li class="changelog-item">
-                    <div class="version">v2.2.1</div>
+                    <div class="version">v2.2.2</div>
                     <div class="version-date">24/02/2026</div>
                     <div class="version-desc">
                         ✨ **Melhorias**:
                         <ul>
-                            <li>Formatação de moeda agora exibe ponto como separador de milhar (ex: R$ 1.000,00).</li>
-                            <li>Campo de orçamento formatado ao perder o foco e limpo ao ganhar foco para facilitar edição.</li>
+                            <li>Ao clicar no campo de orçamento, ele agora fica vazio para digitar um novo valor.</li>
+                            <li>O valor anterior é guardado e restaurado caso a alteração seja cancelada ou o campo fique vazio.</li>
                         </ul>
                     </div>
                 </li>
                 <li class="changelog-item">
-                    <div class="version">v2.2.0</div>
+                    <div class="version">v2.2.1</div>
                     <div class="version-date">24/02/2026</div>
-                    <div class="version-desc">Botão "Zerar Itens", teclado numérico, calculadora corrigida.</div>
+                    <div class="version-desc">Formatação de moeda com separador de milhar.</div>
                 </li>
             </ul>
             <div style="text-align: right; margin-top: 20px;">
@@ -876,14 +876,13 @@
 
     <script>
         (function() {
-            const VERSAO_ATUAL = "v2.2.1";
+            const VERSAO_ATUAL = "v2.2.2";
 
             // Utilitários
             function formatarMoeda(valor) {
                 return 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             }
 
-            // Formata valor sem o símbolo R$ (para input)
             function formatarNumeroInput(valor) {
                 return valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             }
@@ -980,8 +979,10 @@
                 footerBudget.innerText = formatarMoeda(orcamento);
                 footerGasto.innerText = formatarMoeda(totalGasto);
                 footerSaldo.innerText = formatarMoeda(diferenca);
-                // Atualiza o input com formatação (sem perder o foco)
-                budgetInput.value = formatarNumeroInput(orcamento);
+                // Atualiza o input apenas se não estiver com foco (para não atrapalhar edição)
+                if (document.activeElement !== budgetInput) {
+                    budgetInput.value = formatarNumeroInput(orcamento);
+                }
             }
             function salvarNoStorage() {
                 localStorage.setItem('compraFacil_itens', JSON.stringify(itens));
@@ -1292,10 +1293,11 @@
                 confirmModal.style.display = 'flex';
             });
 
-            // Orçamento com formatação
+            // Orçamento com campo vazio no focus e restauração em caso de cancelamento
             budgetInput.addEventListener('focus', function() {
-                // Remove a formatação para edição
-                this.value = orcamento.toFixed(2).replace('.', ',');
+                // Guarda o valor atual antes de limpar
+                orcamentoAntes = orcamento;
+                this.value = ''; // limpa o campo
             });
 
             budgetInput.addEventListener('input', function(e) {
@@ -1304,24 +1306,37 @@
             });
 
             budgetInput.addEventListener('blur', function() {
-                let val = parseMoeda(this.value);
-                if (isNaN(val) || val < 0) val = 0;
-                if (val !== orcamento) {
+                let val = this.value.trim();
+                
+                // Se o campo estiver vazio, restaura o valor anterior sem confirmação
+                if (val === '') {
+                    this.value = formatarNumeroInput(orcamento);
+                    return;
+                }
+
+                let novo = parseMoeda(val);
+                if (isNaN(novo) || novo < 0) novo = 0;
+
+                if (novo !== orcamento) {
                     confirmTitle.innerText = 'Alterar orçamento';
-                    confirmMessage.innerText = `Deseja alterar de ${formatarMoeda(orcamento)} para ${formatarMoeda(val)}?`;
+                    confirmMessage.innerText = `Deseja alterar de ${formatarMoeda(orcamento)} para ${formatarMoeda(novo)}?`;
                     acaoConfirmar = () => {
-                        orcamento = val;
+                        orcamento = novo;
                         salvarNoStorage();
                         atualizarTotais();
+                        // Atualiza o campo com o novo valor formatado
+                        this.value = formatarNumeroInput(orcamento);
                     };
-                    confirmModal.style.display = 'flex';
+                    // Se cancelar, restaura o valor antigo
                     const oldVal = orcamento;
                     const cancelHandler = () => {
-                        budgetInput.value = formatarNumeroInput(oldVal);
+                        this.value = formatarNumeroInput(oldVal);
                         confirmNo.removeEventListener('click', cancelHandler);
                     };
                     confirmNo.addEventListener('click', cancelHandler, { once: true });
+                    confirmModal.style.display = 'flex';
                 } else {
+                    // Se o valor for igual, apenas formata
                     this.value = formatarNumeroInput(orcamento);
                 }
             });
